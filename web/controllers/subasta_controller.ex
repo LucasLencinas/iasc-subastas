@@ -3,10 +3,8 @@ defmodule IascSubastas.SubastaController do
 
   alias IascSubastas.Subasta
 
-  # plug :scrub_params, "subasta" when action in [:create, :update]
-
   def index(conn, _params) do
-    subastas = Repo.all(Subasta)
+    subastas = Repo.all from s in Subasta, preload: [:mejor_oferta]
     render(conn, "index.json", subastas: subastas)
   end
 
@@ -27,7 +25,7 @@ defmodule IascSubastas.SubastaController do
   end
 
   def show(conn, %{"id" => id}) do
-    subasta = Repo.get!(Subasta, id)
+    subasta = Repo.get!(Subasta, id) |> Repo.preload(:mejor_oferta)
     render(conn, "show.json", subasta: subasta)
   end
 

@@ -1,16 +1,15 @@
-defmodule IascSubastas.Subasta do
+defmodule IascSubastas.Oferta do
   use IascSubastas.Web, :model
 
-  schema "subastas" do
-    field :titulo, :string
-    field :precio_base, :float
-    field :duracion, :integer
-    has_one :mejor_oferta, IascSubastas.Oferta
+  schema "ofertas" do
+    field :comprador, :string
+    field :precio, :integer
+    belongs_to :subasta, IascSubastas.Subasta
 
     timestamps
   end
 
-  @required_fields ~w(titulo precio_base duracion)
+  @required_fields ~w(comprador precio subasta_id)
   @optional_fields ~w()
 
   @doc """

@@ -23,6 +23,8 @@ defmodule IascSubastas.Router do
   scope "/api", IascSubastas do
     pipe_through :api
 
-    resources "/subastas", SubastaController, except: [:new, :edit]
+    resources "/subastas", SubastaController, except: [:new, :edit] do
+      resources "/ofertas", OfertaController, except: [:new, :edit]
+    end
   end
 end
