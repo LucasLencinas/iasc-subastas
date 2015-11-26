@@ -2,8 +2,10 @@ defmodule IascSubastas.OfertaTest do
   use IascSubastas.ModelCase
 
   alias IascSubastas.Oferta
+  alias IascSubastas.Subasta
 
-  @valid_attrs %{comprador: "some content", precio: 42}
+  subasta = Repo.insert! %Subasta{}
+  @valid_attrs %{comprador: "some content", precio: 42, subasta_id: subasta.id}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

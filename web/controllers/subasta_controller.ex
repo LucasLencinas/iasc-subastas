@@ -30,7 +30,7 @@ defmodule IascSubastas.SubastaController do
   end
 
   def update(conn, %{"id" => id, "subasta" => subasta_params}) do
-    subasta = Repo.get!(Subasta, id)
+    subasta = Repo.get!(Subasta, id) |> Repo.preload(:mejor_oferta)
     changeset = Subasta.changeset(subasta, subasta_params)
 
     case Repo.update(changeset) do

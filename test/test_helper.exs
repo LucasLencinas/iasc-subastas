@@ -1,6 +1,4 @@
 ExUnit.start
 
-Mix.Task.run "ecto.create", ["--quiet"]
-Mix.Task.run "ecto.migrate", ["--quiet"]
+# Mix.Task.run "ecto.reset", ["--quiet"]
 Ecto.Adapters.SQL.begin_test_transaction(IascSubastas.Repo)
-
