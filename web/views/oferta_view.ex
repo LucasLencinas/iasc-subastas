@@ -1,8 +1,8 @@
 defmodule IascSubastas.OfertaView do
   use IascSubastas.Web, :view
 
-  def render("index.json", %{ofertas: ofertas}) do
-    %{data: render_many(ofertas, IascSubastas.OfertaView, "oferta.json")}
+  def render("index.json", %{oferta: oferta}) do
+    %{data: render_one(oferta, IascSubastas.OfertaView, "oferta.json")}
   end
 
   def render("show.json", %{oferta: oferta}) do

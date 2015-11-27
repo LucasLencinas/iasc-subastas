@@ -14,7 +14,7 @@ defmodule IascSubastas.OfertaControllerTest do
   test "lists all entries on index", %{conn: conn} do
     subasta = Repo.insert! %Subasta{}
     conn = get conn, subasta_oferta_path(conn, :index, subasta.id)
-    assert json_response(conn, 200)["data"] == []
+    assert json_response(conn, 200)["data"] == nil
   end
 
   test "shows chosen resource", %{conn: conn} do
