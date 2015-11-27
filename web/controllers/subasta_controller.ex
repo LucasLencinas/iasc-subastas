@@ -9,7 +9,7 @@ defmodule IascSubastas.SubastaController do
   end
 
   def create(conn, %{"subasta" => subasta_params}) do
-    changeset = Subasta.changeset(%Subasta{}, subasta_params)
+    changeset = Subasta.changeset(%Subasta{mejor_oferta: nil}, subasta_params)
 
     case Repo.insert(changeset) do
       {:ok, subasta} ->

@@ -3,7 +3,7 @@ defmodule IascSubastas.SubastaTest do
 
   alias IascSubastas.Subasta
 
-  @valid_attrs %{precio_base: "120.5", duracion: 42, titulo: "some content"}
+  @valid_attrs %{precio_base: "120.5", duracion: 42, titulo: "some content", terminada: false, vendedor: "vendedor"}
   @invalid_attrs %{}
 
   test "changeset with valid attributes" do

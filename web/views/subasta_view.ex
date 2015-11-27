@@ -14,6 +14,8 @@ defmodule IascSubastas.SubastaView do
       titulo: subasta.titulo,
       precio_base: subasta.precio_base,
       duracion: subasta.duracion,
+      terminada: subasta.terminada,
+      vendedor: subasta.vendedor,
       mejor_oferta: render_one(subasta.mejor_oferta, IascSubastas.OfertaView, "oferta.json")}
   end
 end

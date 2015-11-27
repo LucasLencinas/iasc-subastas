@@ -18,8 +18,9 @@ defmodule IascSubastas.OfertaControllerTest do
   end
 
   test "shows chosen resource", %{conn: conn} do
-    oferta = Repo.insert! %Oferta{}
-    conn = get conn, subasta_oferta_path(conn, :show, oferta.subasta_id, oferta)
+    subasta = Repo.insert! %Subasta{}
+    oferta = Repo.insert! %Oferta{subasta_id: subasta.id}
+    conn = get conn, subasta_oferta_path(conn, :show, subasta.id, oferta)
     assert json_response(conn, 200)["data"] == %{"id" => oferta.id,
       "comprador" => oferta.comprador,
       "precio" => oferta.precio}
@@ -53,15 +54,16 @@ defmodule IascSubastas.OfertaControllerTest do
   end
 
   test "does not update chosen resource and renders errors when data is invalid", %{conn: conn} do
-    oferta = Repo.insert! %Oferta{}
-    conn = put conn, subasta_oferta_path(conn, :show, oferta.subasta_id, oferta), oferta: @invalid_attrs
+    subasta = Repo.insert! %Subasta{}
+    oferta = Repo.insert! %Oferta{subasta_id: subasta.id}
+    conn = put conn, subasta_oferta_path(conn, :show, subasta.id, oferta), oferta: @invalid_attrs
     assert json_response(conn, 422)["errors"] != %{}
   end
 
   test "deletes chosen resource", %{conn: conn} do
-    oferta = Repo.insert! %Oferta{}
-    conn = delete conn, subasta_oferta_path(conn, :show, oferta.subasta_id, oferta)
-subasta_oferta_path(conn, :delete, oferta)
+    subasta = Repo.insert! %Subasta{}
+    oferta = Repo.insert! %Oferta{subasta_id: subasta.id}
+    conn = delete conn, subasta_oferta_path(conn, :delete, subasta.id, oferta)
     assert response(conn, 204)
     refute Repo.get(Oferta, oferta.id)
   end

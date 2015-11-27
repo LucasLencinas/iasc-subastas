@@ -9,10 +9,6 @@ defmodule IascSubastas.OfertaView do
     %{data: render_one(oferta, IascSubastas.OfertaView, "oferta.json")}
   end
 
-  def render("oferta.json", %{oferta: Ecto.Association.NotLoaded}) do
-    %{}
-  end
-
   def render("oferta.json", %{oferta: oferta}) do
     %{id: oferta.id,
       comprador: oferta.comprador,

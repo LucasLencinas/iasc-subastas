@@ -2,7 +2,7 @@ defmodule IascSubastas.SubastaControllerTest do
   use IascSubastas.ConnCase
 
   alias IascSubastas.Subasta
-  @valid_attrs %{precio_base: "120.5", duracion: 42, titulo: "some content"}
+  @valid_attrs %{precio_base: "120.5", duracion: 42, titulo: "some content", vendedor: "vendedor"}
   @invalid_attrs %{}
 
   setup do
@@ -21,7 +21,10 @@ defmodule IascSubastas.SubastaControllerTest do
     assert json_response(conn, 200)["data"] == %{"id" => subasta.id,
       "titulo" => subasta.titulo,
       "precio_base" => subasta.precio_base,
-      "duracion" => subasta.duracion}
+      "duracion" => subasta.duracion,
+      "terminada" => subasta.terminada,
+      "vendedor" => subasta.vendedor,
+      "mejor_oferta" => nil}
   end
 
   test "does not show resource and instead throw error when id is nonexistent", %{conn: conn} do
