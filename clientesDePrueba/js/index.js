@@ -78,6 +78,7 @@ function crearNuevaSubasta(){
       console.log("Se Creo al Subasta Correctamente.");
       vaciarForm();
       agregarAlDivMisSubastas(subasta);
+      misSubastas.push(subasta);
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log("Crear Subasta - Hubo un error en el servidor");
@@ -104,9 +105,6 @@ function armarSubasta(){
      var xMinutesLater = new Date();
      xMinutesLater.setMinutes(xMinutesLater.getMinutes() + $("#duracionNuevaSubasta").val());*/
      precio_base: $("#precioNuevaSubasta").val(),
-     mejor_oferta: null,
-     terminada: false,
-     id: 1 + Math.floor(Math.random() * 5000); //Mucha mala suerte si son los mismo numeros
      };
 }
 
@@ -145,7 +143,7 @@ function mostrarContenido(){
     headers: { 'id-usuario': idUsuario },
     type: "GET",
     contentType: "application/json",
-    url: "/subastas",
+    url: "/api/subastas",
     success: function (data) {
       console.log("Se obtuvieron correctamente las subastas.");
       $.each(data,function(index, unaSubasta){
