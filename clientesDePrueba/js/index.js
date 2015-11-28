@@ -67,7 +67,7 @@ function armarOferta(idSubasta){
 function crearNuevaSubasta(){
   console.log("A punto de crear nueva subasta...");
   var subasta = armarSubasta();
-
+  console.log("contenido del json subasta:" + JSON.stringify(subasta));
   $.ajax({
     headers: { 'id-usuario': idUsuario },
     type: "POST",
