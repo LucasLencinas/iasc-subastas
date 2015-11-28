@@ -6,6 +6,7 @@ defmodule IascSubastas.SubastaWorker do
   import BlockTimer
   alias IascSubastas.Subasta
   alias Ecto.DateTime
+
   # Callbacks
 
   def start_link do
@@ -46,8 +47,8 @@ defmodule IascSubastas.SubastaWorker do
 
   def tiempo_subasta(subasta, extra) do
     delay = subasta.duracion + extra
-    Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{10} segundos..."
-    apply_after 10 |> seconds, do: termina_subasta(subasta.id)
+    Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{delay} segundos..."
+    apply_after delay |> seconds, do: termina_subasta(subasta.id)
   end
 
   def termina_subasta(subasta_id) do

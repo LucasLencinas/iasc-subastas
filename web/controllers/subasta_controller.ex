@@ -2,6 +2,7 @@ defmodule IascSubastas.SubastaController do
   use IascSubastas.Web, :controller
 
   alias IascSubastas.Subasta
+  alias IascSubastas.SubastaWorker
 
   def index(conn, _params) do
     subastas = Repo.all from s in Subasta, preload: [:mejor_oferta]
@@ -17,6 +18,8 @@ defmodule IascSubastas.SubastaController do
         |> put_status(:created)
         |> put_resp_header("location", subasta_path(conn, :show, subasta))
         |> render("show.json", subasta: subasta)
+        # Notificar al worker
+        # GenServer.cast(SubastaWorker, {:nueva_subasta, subasta.id})
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
