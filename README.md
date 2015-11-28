@@ -1,22 +1,50 @@
 # IascSubastas - IASC-2c-2015
 
-To start your Phoenix app:
+Levantar la aplicación
 
-  1. Install dependencies with `mix deps.get`
-  2. Create and migrate your database with `mix ecto.create && mix ecto.migrate`
-  3. Start Phoenix endpoint with `mix phoenix.server`
+  1. Instalar dependencias `mix deps.get`
+  2. Crear y migrar la base de datos con `mix ecto.create && mix ecto.migrate`
+  3. Levantar el server con `mix phoenix.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## Api
 
-Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
+# Crear una subasta
 
-## Learn more
+```
+POST /api/subastas
 
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: http://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+body:
+
+{
+    "subasta": {
+        "titulo": "subasta 2",
+        "precio_base": 100,
+        "duracion": 5000
+        "vendedor": "pablo"
+    }
+}
+```
+
+# Cancelar una subasta
+
+```
+POST /api/subastas/:id_subasta/cancelar
+```
+
+# Ofertar
+
+```
+POST /api/subastas/:id_subasta/ofertas
+
+body:
+
+{
+    "oferta": {
+        "precio": 20000,
+        "comprador": "pablo"
+    }
+}
+```
 
 # Enunciado
 TP final de Arquitecturas Concurrentes

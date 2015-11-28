@@ -43,6 +43,20 @@ defmodule IascSubastas.SubastaController do
     end
   end
 
+  def cancelar(conn, %{"subasta_id" => id}) do
+    subasta = Repo.get!(Subasta, id) |> Repo.preload(:mejor_oferta)
+    changeset = Subasta.changeset(subasta, %{terminada: true})
+
+    case Repo.update(changeset) do
+      {:ok, subasta} ->
+        render(conn, "show.json", subasta: subasta)
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render(IascSubastas.ChangesetView, "error.json", changeset: changeset)
+    end
+  end
+
   def delete(conn, %{"id" => id}) do
     subasta = Repo.get!(Subasta, id)
 

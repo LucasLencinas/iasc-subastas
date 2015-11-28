@@ -24,6 +24,7 @@ defmodule IascSubastas.Router do
     pipe_through :api
 
     resources "/subastas", SubastaController, except: [:new, :edit] do
+      post "/cancelar", SubastaController, :cancelar
       resources "/ofertas", OfertaController, except: [:new, :edit]
     end
   end
