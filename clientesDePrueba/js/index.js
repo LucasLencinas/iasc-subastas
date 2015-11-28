@@ -42,10 +42,10 @@ function ofertar(idSubasta){
 
   $.ajax({
     headers: { 'id-usuario': idUsuario },
-    type: "PUT",
+    type: "POST",
     contentType: "application/json",
     data: JSON.stringify(oferta),
-    url: "/oferta/" + oferta.id,
+    url: "/api/subastas/"+ idSubasta + "/ofertas",
     success: function (data) {
       console.log("Se Oferto Correctamente.");
       renderizarOfertaEnSubasta(oferta.id);
@@ -60,7 +60,7 @@ function ofertar(idSubasta){
 
 function armarOferta(idSubasta){
   var subasta = $.grep(subastasDeTerceros, function(elem){ return elem.id === idSubasta; });
-  return {id: subasta.id, precio: subasta.montoActual+2, usuario: idUsuario};
+  return {precio: subasta.montoActual+2, comprador: idUsuario};
 }
 
 
