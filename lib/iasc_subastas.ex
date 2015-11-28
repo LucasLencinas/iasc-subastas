@@ -11,6 +11,7 @@ defmodule IascSubastas do
       supervisor(IascSubastas.Endpoint, []),
       # Start the Ecto repository
       worker(IascSubastas.Repo, []),
+      worker(IascSubastas.SubastaWorker, [])
       # Here you could define other workers and supervisors as children
       # worker(IascSubastas.Worker, [arg1, arg2, arg3]),
     ]

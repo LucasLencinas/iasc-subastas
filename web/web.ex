@@ -37,6 +37,14 @@ defmodule IascSubastas.Web do
     end
   end
 
+  def worker do
+    quote do
+      alias IascSubastas.Repo
+      import Ecto.Model
+      import Ecto.Query, only: [from: 1, from: 2]
+    end
+  end
+
   def view do
     quote do
       use Phoenix.View, root: "web/templates"
