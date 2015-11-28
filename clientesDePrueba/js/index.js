@@ -6,7 +6,6 @@ var idUsuario;
 var misSubastas = [];
 
 function initialize() {
-
   $('#modalLogin').modal('toggle');
 }
 
@@ -18,7 +17,7 @@ function renderizarSubastas(){
 
 function renderizarUnaSubasta(subasta){
   var vistaSubasta = sprintf("<div class=\"col-md-4 col-sm-8 hero-feature\">");
-//  var vistaSubasta = sprintf("<div>");
+  //  var vistaSubasta = sprintf("<div>");
   vistaSubasta += sprintf("<div class=\"thumbnail\">");
   vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", subasta.id);
   vistaSubasta += sprintf("<h3>%s</h3><p>$ %s.</p><p>Hasta las %s.</p><p>" +
@@ -74,7 +73,7 @@ function crearNuevaSubasta(){
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(subasta),
-    url: "/subastas",
+    url: "/api/subastas",
     success: function (data) {
       console.log("Se Creo al Subasta Correctamente.");
       vaciarForm();
@@ -85,22 +84,32 @@ function crearNuevaSubasta(){
       console.log(JSON.stringify(jqXHR) + ". " + JSON.stringify(textStatus) + ". " + JSON.stringify(errorThrown));
     }
   });
-
-  $("#duracionNuevaSubasta").val()
-
 }
 
 function armarSubasta(){
+  /*Armar algo del estilo:
+  {"data":{"vendedor":"Juan",
+  "titulo":"venta heladera",
+  "terminada":false,
+  "precio_base":200.0,
+  "mejor_oferta":null,
+  "id":9,"duracion":10}}
+  */
   return {
-     idSubastador: idUsuario,
+     vendedor: idUsuario,
      titulo: $("#tituloNuevaSubasta").val(),
      duracion: $("#duracionNuevaSubasta").val(),
+
      /*O si queres poner el tiempo final
      var xMinutesLater = new Date();
      xMinutesLater.setMinutes(xMinutesLater.getMinutes() + $("#duracionNuevaSubasta").val());*/
-     precioBase: $("#precioNuevaSubasta").val()
+     precio_base: $("#precioNuevaSubasta").val(),
+     mejor_oferta: null,
+     terminada: false,
+     id: 1 + Math.floor(Math.random() * 5000); //Mucha mala suerte si son los mismo numeros
      };
 }
+
 function vaciarForm(){
   titulo: $("#tituloNuevaSubasta").val("");
   duracion: $("#duracionNuevaSubasta").val("");
@@ -112,7 +121,7 @@ function agregarAlDivMisSubastas(unaSubasta){
   var vistaSubasta = sprintf("<div class=\"form-group\" id=\"div%s\">", unaSubasta.titulo);
   vistaSubasta += sprintf("<label class=\"control-label col-sm-2\">%s</label>", unaSubasta.titulo);
   vistaSubasta += sprintf("<div class=\"col-sm-10\">");
-  vistaSubasta += sprintf("<button class=\"btn btn-default\" onclick=\"cancelarSubasta(%s)\">Cancelar Subasta</button>",unaSubasta.titulo);
+  vistaSubasta += sprintf("<button class=\"btn btn-default\" onclick=\"cancelarSubasta('%s')\">Cancelar Subasta</button>",unaSubasta.titulo);
   vistaSubasta += "</div></div>";
   $('#misSubastas').append(vistaSubasta);
 
@@ -178,7 +187,7 @@ function eliminarMiSubasta(titulo){
   $("#div"+titulo).remove();
   misSubastas = $.grep(misSubastas, function(elem, index) {
    return elem.titulo != titulo;
-});
+  });
 
 }
 
