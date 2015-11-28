@@ -1,9 +1,9 @@
 
 //Funciones que se ejcutan en el index.html
 
-var subastas = [];
+var subastasDeTerceros = [];
 var idUsuario;
-
+var misSubastas = [];
 
 function initialize() {
 
@@ -11,7 +11,7 @@ function initialize() {
 }
 
 function renderizarSubastas(){
-  $.each(subastas,function(index, unaSubasta){
+  $.each(subastasDeTerceros,function(index, unaSubasta){
         renderizarUnaSubasta(unaSubasta);
   });
 }
@@ -60,7 +60,7 @@ function ofertar(idSubasta){
 }
 
 function armarOferta(idSubasta){
-  var subasta = $.grep(subastas, function(elem){ return elem.id === idSubasta; });
+  var subasta = $.grep(subastasDeTerceros, function(elem){ return elem.id === idSubasta; });
   return {id: subasta.id, precio: subasta.montoActual+2, usuario: idUsuario};
 }
 
@@ -78,6 +78,7 @@ function crearNuevaSubasta(){
     success: function (data) {
       console.log("Se Creo al Subasta Correctamente.");
       vaciarForm();
+      agregarAlDivMisSubastas(subasta);
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log("Crear Subasta - Hubo un error en el servidor");
@@ -107,6 +108,16 @@ function vaciarForm(){
 
 }
 
+function agregarAlDivMisSubastas(unaSubasta){
+  var vistaSubasta = sprintf("<div class=\"form-group\" id=\"div%s\">", unaSubasta.titulo);
+  vistaSubasta += sprintf("<label class=\"control-label col-sm-2\">%s</label>", unaSubasta.titulo);
+  vistaSubasta += sprintf("<div class=\"col-sm-10\">");
+  vistaSubasta += sprintf("<button class=\"btn btn-default\" onclick=\"cancelarSubasta(%s)\">Cancelar Subasta</button>",unaSubasta.titulo);
+  vistaSubasta += "</div></div>";
+  $('#misSubastas').append(vistaSubasta);
+
+}
+
 
 function login(){
   var nombreUsuario = $("#nombreUsuario").val();
@@ -118,8 +129,8 @@ function login(){
 }
 
 function mostrarContenido(){
-  subastas.push({id: 1, titulo:"pelota futbol", montoActual: 20.00});
-  subastas.push({id: 2, titulo:"remera", montoActual: 50.00});
+  subastasDeTerceros.push({id: 1, titulo:"pelota futbol", montoActual: 20.00});
+  subastasDeTerceros.push({id: 2, titulo:"remera", montoActual: 50.00});
   /*Cambiar esas subastas de arriba por una peticion ajax al servidor despues de haberse logueado*/
   $.ajax({
     headers: { 'id-usuario': idUsuario },
@@ -129,7 +140,7 @@ function mostrarContenido(){
     success: function (data) {
       console.log("Se obtuvieron correctamente las subastas.");
       $.each(data,function(index, unaSubasta){
-          subastas.push(unaSubasta);
+          subastasDeTerceros.push(unaSubasta);
           //renderizarSubastas(); Descomentar este y borrar el otro renderizar que esta de prueba
       });
 
@@ -141,10 +152,35 @@ function mostrarContenido(){
   })
 
   /*Renderizar esas nuevas subastas */
-
   renderizarSubastas();
 }
 
+function cancelarSubasta(titulo){
+
+  $.ajax({
+    headers: { 'id-usuario': idUsuario },
+    type: "POST",
+    url: "/api/subastas/" + titulo + "/cancelar",
+    success: function (data) {
+      console.log("Se Cancelo la Subasta Correctamente.");
+      eliminarMiSubasta(titulo);
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+      console.log("Crear Subasta - Hubo un error en el servidor");
+      console.log(JSON.stringify(jqXHR) + ". " + JSON.stringify(textStatus) + ". " + JSON.stringify(errorThrown));
+    }
+  });
+
+
+}
+
+function eliminarMiSubasta(titulo){
+  $("#div"+titulo).remove();
+  misSubastas = $.grep(misSubastas, function(elem, index) {
+   return elem.titulo != titulo;
+});
+
+}
 
 
 /* Un comprador A se registra.
