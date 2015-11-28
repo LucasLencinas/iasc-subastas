@@ -19,7 +19,7 @@ body:
     "subasta": {
         "titulo": "subasta 2",
         "precio_base": 100,
-        "duracion": 5000
+        "duracion": 5000,
         "vendedor": "pablo"
     }
 }
@@ -45,6 +45,12 @@ body:
     }
 }
 ```
+
+## Subasta worker
+
+Es un GenServer que se encarga de notificar a la app http que se termina una subasta.
+Cuando inicia carga las subastas activas de la db y cada vez que se agrega una hay que mandarle un cast con {:nueva_subasta, subasta_id}.
+
 
 # Enunciado
 TP final de Arquitecturas Concurrentes

@@ -20,7 +20,7 @@ defmodule IascSubastas.SubastaWorker do
     Logger.info"SubastaWorker> Empezando..."
     Enum.each(
       subastas,
-      &tiempo_subasta/1
+      &tiempo_subasta_caida/1
     )
     {:ok, Enum.map(subastas, fn(s) -> s.id end)}
   end
@@ -30,6 +30,8 @@ defmodule IascSubastas.SubastaWorker do
   end
 
   def handle_cast({:nueva_subasta, subasta_id}, subastas) do
+    subasta = Repo.get!(Subasta, subasta_id) |> Repo.preload(:mejor_oferta)
+    tiempo_subasta(subasta, 0)
     {:noreply, [subasta_id|subastas] }
   end
 
@@ -37,9 +39,12 @@ defmodule IascSubastas.SubastaWorker do
     {:noreply, List.delete(subastas, subasta_id)}
   end
 
-  def tiempo_subasta(subasta) do
-    # debería ser duración menos el tiempo que pasó antes (usando inserted_at)
-    delay = subasta.duracion
+  def tiempo_subasta_caida(subasta) do
+    tiempo_subasta(subasta, 5)
+  end
+
+  def tiempo_subasta(subasta, extra) do
+    delay = subasta.duracion + extra
     Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{delay} segundos..."
     apply_after delay |> seconds, do: termina_subasta(subasta.id)
   end
