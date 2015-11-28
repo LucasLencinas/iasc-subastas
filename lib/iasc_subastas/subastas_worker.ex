@@ -36,6 +36,7 @@ defmodule IascSubastas.SubastaWorker do
   end
 
   def handle_cast({:cancela_subasta, subasta_id}, subastas) do
+    termina_subasta(subasta_id)
     {:noreply, List.delete(subastas, subasta_id)}
   end
 
@@ -45,11 +46,19 @@ defmodule IascSubastas.SubastaWorker do
 
   def tiempo_subasta(subasta, extra) do
     delay = subasta.duracion + extra
-    Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{delay} segundos..."
-    apply_after delay |> seconds, do: termina_subasta(subasta.id)
+    Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{10} segundos..."
+    apply_after 10 |> seconds, do: termina_subasta(subasta.id)
   end
 
   def termina_subasta(subasta_id) do
-    Logger.info"SubastaWorker> terminó la subasta #{subasta_id}..."
+    subasta = Repo.get!(Subasta, subasta_id) |> Repo.preload(:mejor_oferta)
+    changeset = Subasta.changeset(subasta, %{terminada: true})
+    Repo.update(changeset)
+    case subasta.mejor_oferta do
+      nil ->
+        Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, nadie ganó..."
+      mejor_oferta ->
+        Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, ganó #{mejor_oferta.comprador}..."
+    end
   end
 end
