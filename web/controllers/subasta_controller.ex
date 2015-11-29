@@ -5,8 +5,13 @@ defmodule IascSubastas.SubastaController do
   alias IascSubastas.SubastaWorker
 
   def index(conn, _params) do
-    subastas = Repo.all from s in Subasta, preload: [:mejor_oferta]
-    render(conn, "index.json", subastas: subastas)
+      render conn, "index.html"
+    # subastas = Repo.all from s in Subasta, preload: [:mejor_oferta]
+    # render(conn, "index.json", subastas: subastas)
+  end
+
+  def cliente(conn, _params) do
+    render conn, "index.html"
   end
 
   def create(conn, %{"subasta" => subasta_params}) do
