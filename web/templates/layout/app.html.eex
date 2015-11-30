@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <title>Subastas - IASC</title>
 
-    <title>Hello Phoenix!</title>
+    <link href="<%= static_path(@conn, "/css/bootstrap.min.css") %>" rel="stylesheet">
+    <link href="<%= static_path(@conn, "/css/heroic-features.css") %>" rel="stylesheet">
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
@@ -19,5 +19,13 @@
 
     </div> <!-- /container -->
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/jquery.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/bootstrap.min.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/index.js") %>"></script>
+    <script>
+    $( document ).ready(function() {
+       initialize();
+    });
+    </script>
   </body>
 </html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Subastas - IASC</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/heroic-features.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Subastas</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">About</a>
+                    </li>
+                    <li>
+                        <a href="#">Services</a>
+                    </li>
+                    <li>
+                        <a id="nombreUsuarioLogueado" href="#">nombreUsuarioLogueado</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+        <!-- Jumbotron Header -->
+        <header class="jumbotron hero-spacer">
+            <h1>A Warm Welcome!</h1>
+            <p>Publica una subasta u oferta en alguna ya publicada.</p>
+        </header>
+
+        <hr>
+
+
+
+        <!-- Page Features -->
+        <div class="row text-center">
+
+          <div class="col-md-6"  id="subastasActuales">
+            <h3>Subastas Actuales</h3>
+          </div><!-- /.SubastasActuales -->
+
+          <div class="col-md-6">
+            <h3>Nueva Subasta</h3>
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="tituloNuevaSubasta">Titulo:</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="tituloNuevaSubasta" placeholder="Titulo de la subasta">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="precioNuevaSubasta">Precio:</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="precioNuevaSubasta" >
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="duracionNuevaSubasta">Duracion:</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="duracionNuevaSubasta" >
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button class="btn btn-default" onclick="crearNuevaSubasta()">CrearSubasta</button>
+                </div>
+              </div>
+            </form>
+
+            <div class="col-md-6"  id="misSubastas">
+              <h3>Mis Subastas</h3>
+            </div>
+
+          </div>
+        </div>
+        <!-- /.row -->
+
+
+
+
+    </div>
+
+    <div class="modal fade" id= "modalLogin" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Registrar</h4>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="nombreUsuario">Nombre:</label>
+              <div class="col-sm-10">
+                <input class="form-control" id="nombreUsuario" >
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id= "botonLogin" onclick="login()">Login</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/index.js"></script>
+    <script>
+    $( document ).ready(function() {
+       initialize();
+    });
+    </script>
+
+
+</body>
+
+</html>

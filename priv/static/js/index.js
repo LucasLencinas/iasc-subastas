@@ -39,13 +39,12 @@ function ofertar(idSubasta){
 
   console.log("A punto de ofertar...");
   var oferta = armarOferta(idSubasta);
-
   $.ajax({
     headers: { 'id-usuario': idUsuario },
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(oferta),
-    url: "http://domain.com:8080/api/subastas/"+ idSubasta + "/ofertas",
+    url:   location.origin + "/api/subastas/"+ idSubasta + "/ofertas",
     success: function (data) {
       console.log("Se Oferto Correctamente.");
       renderizarOfertaEnSubasta(oferta.id);
@@ -73,7 +72,7 @@ function crearNuevaSubasta(){
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(subasta),
-    url: "http://domain.com:8080/api/subastas",
+    url: location.origin + "/api/subastas",
     success: function (data) {
       console.log("Se Creo al Subasta Correctamente.");
       vaciarForm();
@@ -167,7 +166,7 @@ function cancelarSubasta(titulo){
   $.ajax({
     headers: { 'id-usuario': idUsuario },
     type: "POST",
-    url: "http://domain.com:8080/api/subastas/" + titulo + "/cancelar",
+    url: location.origin + "/api/subastas/" + titulo + "/cancelar",
     success: function (data) {
       console.log("Se Cancelo la Subasta Correctamente.");
       eliminarMiSubasta(titulo);
