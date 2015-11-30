@@ -6,12 +6,7 @@ var idUsuario;
 var misSubastas = [];
 
 function initialize() {
-  if (readCookie("usuario")== null) 
-     $('#modalLogin').modal('show');
-  else {
-    idUsuario = readCookie("usuario")
-    $("#nombreUsuarioLogueado").text(idUsuario);
-  };
+  $('#modalLogin').modal('show');
   mostrarContenido();
 }
 
@@ -140,7 +135,6 @@ function login(){
     $("#nombreUsuarioLogueado").text($("#nombreUsuario").val());
     idUsuario = $("#nombreUsuarioLogueado").text();
     $('#modalLogin').modal('toggle');
-    createCookie("usuario",nombreUsuario, 7);
 }
 
 function mostrarContenido(){
