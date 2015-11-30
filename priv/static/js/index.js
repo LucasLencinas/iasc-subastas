@@ -10,7 +10,8 @@ function initialize() {
 }
 
 function renderizarSubastas(){
-  $.each(subastasDeTerceros,function(index, unaSubasta){
+  $.each(subastasDeTerceros[0],function(index, unaSubasta){
+    console.log(unaSubasta);
         renderizarUnaSubasta(unaSubasta);
   });
 }
@@ -20,9 +21,9 @@ function renderizarUnaSubasta(subasta){
   //  var vistaSubasta = sprintf("<div>");
   vistaSubasta += sprintf("<div class=\"thumbnail\">");
   vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", subasta.id);
-  vistaSubasta += sprintf("<h3>%s</h3><p>$ %s.</p><p>Hasta las %s.</p><p>" +
+  vistaSubasta += sprintf("<h3>%s</h3><p>$ %s.</p><p>Finalizada: %s.</p><p>" +
         "<button class=\"btn btn-primary\" onclick=\"ofertar(%s)\"> Ofertar (+ $2)! </button></p>",
-        subasta.titulo, subasta.montoActual, subasta.tiempoFin, subasta.id);
+        subasta.titulo, subasta.mejor_oferta, subasta.terminada, subasta.id);
   vistaSubasta += "</div></div></div>";
   $('#subastasActuales').append(vistaSubasta);
 
@@ -59,7 +60,7 @@ function ofertar(idSubasta){
 
 function armarOferta(idSubasta){
   var subasta = $.grep(subastasDeTerceros, function(elem){ return elem.id === idSubasta; });
-  return {precio: subasta.montoActual+2, comprador: idUsuario};
+  return {precio: subasta.mejor_oferta+2, comprador: idUsuario};
 }
 
 
@@ -100,11 +101,11 @@ function armarSubasta(){
          vendedor: idUsuario,
          titulo: $("#tituloNuevaSubasta").val(),
          duracion: $("#duracionNuevaSubasta").val(),
-
          /*O si queres poner el tiempo final
          var xMinutesLater = new Date();
          xMinutesLater.setMinutes(xMinutesLater.getMinutes() + $("#duracionNuevaSubasta").val());*/
-         precio_base: $("#precioNuevaSubasta").val()
+         precio_base: $("#precioNuevaSubasta").val(),
+         terminada: false
        }
      };
 }
@@ -137,7 +138,7 @@ function login(){
 }
 
 function mostrarContenido(){
-  subastasDeTerceros.push({id: 1, titulo:"pelota futbol", montoActual: 20.00});
+ /* subastasDeTerceros.push({id: 1, titulo:"pelota futbol", montoActual: 20.00});
   subastasDeTerceros.push({id: 2, titulo:"remera", montoActual: 50.00});
   /*Cambiar esas subastas de arriba por una peticion ajax al servidor despues de haberse logueado*/
   $.ajax({
@@ -149,7 +150,7 @@ function mostrarContenido(){
       console.log("Se obtuvieron correctamente las subastas.");
       $.each(data,function(index, unaSubasta){
           subastasDeTerceros.push(unaSubasta);
-          //renderizarSubastas(); Descomentar este y borrar el otro renderizar que esta de prueba
+          renderizarSubastas(); //Descomentar este y borrar el otro renderizar que esta de prueba
       });
 
     },
@@ -158,9 +159,6 @@ function mostrarContenido(){
       console.log(JSON.stringify(jqXHR) + ". " + JSON.stringify(textStatus) + ". " + JSON.stringify(errorThrown));
     }
   })
-
-  /*Renderizar esas nuevas subastas */
-  renderizarSubastas();
 }
 
 function cancelarSubasta(titulo){
