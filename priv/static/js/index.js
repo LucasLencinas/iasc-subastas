@@ -60,7 +60,7 @@ function ofertar(idSubasta){
 }
 
 function armarOferta(idSubasta){
-  var subasta = $.grep(subastasDeTerceros, function(elem){ return elem.id === idSubasta; });
+  var subasta = $.grep(subastasDeTerceros[0], function(elem){ return elem.id === idSubasta; })[0];
   return {precio: subasta.mejor_oferta+2, comprador: idUsuario};
 }
 
