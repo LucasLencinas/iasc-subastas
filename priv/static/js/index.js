@@ -24,7 +24,7 @@ function renderizarUnaSubasta(subasta){
   vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", subasta.id);
   vistaSubasta += sprintf("<h3>%s</h3><p>$ %s.</p><p>Finalizada: %s.</p><p>" +
         "<button class=\"btn btn-primary\" onclick=\"ofertar(%s)\"> Ofertar (+ $2)! </button></p>",
-        subasta.titulo, subasta.mejor_oferta, subasta.terminada, subasta.id);
+        subasta.titulo, subasta.mejor_oferta.precio, subasta.terminada, subasta.id);
   vistaSubasta += "</div></div></div>";
   $('#subastasActuales').append(vistaSubasta);
 
@@ -61,7 +61,7 @@ function ofertar(idSubasta){
 
 function armarOferta(idSubasta){
   var subasta = $.grep(subastasDeTerceros[0], function(elem){ return elem.id === idSubasta; })[0];
-  return {precio: subasta.mejor_oferta+2, comprador: idUsuario};
+  return {oferta:  {precio: subasta.mejor_oferta.precio+2, comprador: idUsuario} };
 }
 
 
