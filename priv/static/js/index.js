@@ -19,6 +19,7 @@ function renderizarSubastas(){
 function renderizarUnaSubasta(subasta){
   var vistaSubasta = sprintf("<div class=\"col-md-4 col-sm-8 hero-feature\">");
   //  var vistaSubasta = sprintf("<div>");
+  if (subasta.mejor_oferta == null) subasta.mejor_oferta = subasta.precio_base;
   vistaSubasta += sprintf("<div class=\"thumbnail\">");
   vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", subasta.id);
   vistaSubasta += sprintf("<h3>%s</h3><p>$ %s.</p><p>Finalizada: %s.</p><p>" +
