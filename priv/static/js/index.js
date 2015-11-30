@@ -6,7 +6,7 @@ var idUsuario;
 var misSubastas = [];
 
 function initialize() {
-  $('#modalLogin').modal('toggle');
+  $('#modalLogin').modal('show');
 }
 
 function renderizarSubastas(){
