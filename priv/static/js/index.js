@@ -12,6 +12,7 @@ function initialize() {
     idUsuario = readCookie("usuario")
     $("#nombreUsuarioLogueado").text(idUsuario);
   };
+  mostrarContenido();
 }
 
 function renderizarSubastas(){
@@ -135,18 +136,11 @@ function agregarAlDivMisSubastas(unaSubasta){
 
 
 function login(){
-  if (readCookie("usuario")== null) 
-  {
-      var nombreUsuario = $("#nombreUsuario").val();
-      $("#nombreUsuarioLogueado").text($("#nombreUsuario").val());
-      idUsuario = $("#nombreUsuarioLogueado").text();
-      $('#modalLogin').modal('toggle');
-      createCookie("usuario",nombreUsuario, 7);
-  }
-  else
-    nombreUsuario = readCookie("usuario");
-  mostrarContenido();
-
+    var nombreUsuario = $("#nombreUsuario").val();
+    $("#nombreUsuarioLogueado").text($("#nombreUsuario").val());
+    idUsuario = $("#nombreUsuarioLogueado").text();
+    $('#modalLogin').modal('toggle');
+    createCookie("usuario",nombreUsuario, 7);
 }
 
 function mostrarContenido(){

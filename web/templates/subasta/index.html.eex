@@ -109,13 +109,3 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/index.js"></script>
-    <script src="js/index.js"></script>
-    <script>
-    $( document ).ready(function() {
-       initialize();
-    });
-    </script>
