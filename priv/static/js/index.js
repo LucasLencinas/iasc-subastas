@@ -96,14 +96,16 @@ function armarSubasta(){
   "id":9,"duracion":10}}
   */
   return {
-     vendedor: idUsuario,
-     titulo: $("#tituloNuevaSubasta").val(),
-     duracion: $("#duracionNuevaSubasta").val(),
+      subasta:{
+         vendedor: idUsuario,
+         titulo: $("#tituloNuevaSubasta").val(),
+         duracion: $("#duracionNuevaSubasta").val(),
 
-     /*O si queres poner el tiempo final
-     var xMinutesLater = new Date();
-     xMinutesLater.setMinutes(xMinutesLater.getMinutes() + $("#duracionNuevaSubasta").val());*/
-     precio_base: $("#precioNuevaSubasta").val(),
+         /*O si queres poner el tiempo final
+         var xMinutesLater = new Date();
+         xMinutesLater.setMinutes(xMinutesLater.getMinutes() + $("#duracionNuevaSubasta").val());*/
+         precio_base: $("#precioNuevaSubasta").val()
+       }
      };
 }
 
