@@ -9,9 +9,9 @@ defmodule IascSubastas.SubastaWorker do
 
   # Callbacks
 
-  def start_link do
-    GenServer.start_link(__MODULE__, [])
-  end
+  def start_link(opts \\ []) do
+     GenServer.start_link(__MODULE__, :ok, opts)
+   end
 
   def init(_args) do
     subastas = Repo.all from s in Subasta,

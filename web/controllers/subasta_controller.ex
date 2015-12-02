@@ -17,12 +17,12 @@ defmodule IascSubastas.SubastaController do
     changeset = Subasta.changeset(%Subasta{mejor_oferta: nil}, subasta_params)
     case Repo.insert(changeset) do
       {:ok, subasta} ->
+        # Notificamos al worker
+        GenServer.cast({:global, :subasta_worker}, {:nueva_subasta, subasta.id})
         conn
         |> put_status(:created)
         |> put_resp_header("location", subasta_path(conn, :show, subasta))
         |> render("show.json", subasta: subasta)
-        # Notificar al worker
-        # GenServer.cast(SubastaWorker, {:nueva_subasta, subasta.id})
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
