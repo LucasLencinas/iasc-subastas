@@ -6,7 +6,7 @@ defmodule IascSubastas.SubastaWorker do
   import BlockTimer
   alias IascSubastas.Subasta
   alias Ecto.DateTime
-
+  alias IascSubastas.TimeConvert
   # Callbacks
 
   def start_link(opts \\ []) do
@@ -17,7 +17,6 @@ defmodule IascSubastas.SubastaWorker do
     subastas = Repo.all from s in Subasta,
                         preload: [:mejor_oferta],
                         where: s.terminada == false
-    # TODO: sumar 5 segundos a la duración
     Logger.info"SubastaWorker> Empezando..."
     Enum.each(
       subastas,
@@ -46,9 +45,14 @@ defmodule IascSubastas.SubastaWorker do
   end
 
   def tiempo_subasta(subasta, extra) do
-    delay = subasta.duracion + extra
-    Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{delay} segundos..."
-    apply_after delay |> seconds, do: termina_subasta(subasta.id)
+    delay = duracion_subasta(subasta) + extra
+    if delay < 0 do
+      Logger.info"SubastaWorker> La subasta #{subasta.id} ya terminó..."
+      termina_subasta(subasta.id)
+    else
+      Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{delay} segundos..."
+      apply_after delay |> seconds, do: termina_subasta(subasta.id)
+    end
   end
 
   def termina_subasta(subasta_id) do
@@ -61,5 +65,9 @@ defmodule IascSubastas.SubastaWorker do
       mejor_oferta ->
         Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, ganó #{mejor_oferta.comprador}..."
     end
+  end
+
+  def duracion_subasta(subasta) do
+    TimeConvert.to_timestamp(subasta.inserted_at) - TimeConvert.to_timestamp(Ecto.DateTime.utc) + subasta.duracion
   end
 end
