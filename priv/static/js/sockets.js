@@ -1307,14 +1307,29 @@ var App = (function () {
 
         chan.on("nueva_subasta", function (msg) {
           console.log("Nueva subasta: ", msg);
+          if ($("#nombreUsuarioLogueado").text() != msg.vendedor) {
+            alert(msg.vendedor + " creó una nueva subasta. (precio: " + msg.precio + ", duracion: " + msg.duracion);
+          }
         });
 
         chan.on("subasta_terminada", function (msg) {
           console.log("Subasta terminada: ", msg);
+          if (msg.ganador) {
+            if (msg.ganador == $("#nombreUsuarioLogueado").text()) {
+              alert("Ganaste la subasta (" + msg.subasta_id + "). Felicitaciones!");
+            } else {
+              alert(msg.ganador + " ganó la subasta (" + msg.subasta_id + ").");
+            }
+          } else {
+            alert("Nadie ganó la subasta (" + msg.subasta_id + ").");
+          }
         });
 
         chan.on("nueva_oferta", function (msg) {
           console.log("Nueva oferta: ", msg);
+          if (msg.comprador != $("#nombreUsuarioLogueado").text()) {
+            alert(msg.comprador + " mejoro la oferta de la subasta (" + msg.subasta_id + ").");
+          }
         });
       }
     },

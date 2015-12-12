@@ -28,11 +28,18 @@
         <!-- Page Features -->
         <div class="row text-center">
 
-          <div class="col-md-6"  id="subastasActuales">
-            <h3>Subastas Actuales</h3>
-          </div><!-- /.SubastasActuales -->
+          <div class="col-md-6 col-xs-8">
+            <h3>
+              Subastas Actuales
+              <a href="#" id="actualizarSubastas" onclick="mostrarContenido()">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+              </a>
+            </h3>
+            <div class="row" id="subastasActuales">
+            </div><!-- /.SubastasActuales -->
+          </div>
 
-          <div class="col-md-6">
+          <div class="col-md-6 col-xs-4">
             <h3>Nueva Subasta</h3>
             <form class="form-horizontal" role="form">
               <div class="form-group">

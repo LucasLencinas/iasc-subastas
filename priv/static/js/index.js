@@ -11,6 +11,7 @@ function initialize() {
 }
 
 function renderizarSubastas(){
+  $('#subastasActuales').empty();
   $.each(subastasDeTerceros[0],function(index, unaSubasta){
     console.log(unaSubasta);
         renderizarUnaSubasta(unaSubasta);
@@ -18,14 +19,14 @@ function renderizarSubastas(){
 }
 
 function renderizarUnaSubasta(subasta){
-  var vistaSubasta = sprintf("<div class=\"col-md-4 col-sm-8 hero-feature\">");
+  var vistaSubasta = sprintf("<div class=\"col-md-4 col-sm-8 col-xs-6 hero-feature\">");
   //  var vistaSubasta = sprintf("<div>");
   if (subasta.mejor_oferta == null) subasta.mejor_oferta = {precio: subasta.precio_base};
-  vistaSubasta += sprintf("<div class=\"thumbnail\">");
+  vistaSubasta += sprintf("<div class=\"thumbnail %s\">", (subasta.terminada ? 'terminada' : 'activa'));
   vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", subasta.id);
-  vistaSubasta += sprintf("<h3>%s</h3><p>$ %s.</p><p>Finalizada: %s.</p><p>" +
+  vistaSubasta += sprintf("<h3>%s (id = %s)</h3><p>$ %s.</p><p>Vendedor: %s.</p><p><p>Finalizada: %s.</p><p>" +
         "<button class=\"btn btn-primary\" onclick=\"ofertar(%s)\"> Ofertar (+ $2)! </button></p>",
-        subasta.titulo, subasta.mejor_oferta.precio, subasta.terminada, subasta.id);
+        subasta.titulo, subasta.id, subasta.mejor_oferta.precio, subasta.vendedor, (subasta.terminada ? 'Sí' : 'No'), subasta.id);
   vistaSubasta += "</div></div></div>";
   $('#subastasActuales').append(vistaSubasta);
 
@@ -149,6 +150,7 @@ function mostrarContenido(){
     success: function (data) {
       console.log("Se obtuvieron correctamente las subastas.");
       $.each(data,function(index, unaSubasta){
+          subastasDeTerceros = []
           subastasDeTerceros.push(unaSubasta);
           renderizarSubastas(); //Descomentar este y borrar el otro renderizar que esta de prueba
       });
@@ -187,7 +189,6 @@ function eliminarMiSubasta(titulo){
   });
 
 }
-
 
 /* Un comprador A se registra.
     un nombre

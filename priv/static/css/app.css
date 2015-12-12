@@ -45,8 +45,7 @@ form.link, form.button {
 }
 
 .thumbnail {
-  width: 200px;
-  height: 180px;
+  width: 100%;
 }
 
 .conBorde {
@@ -79,4 +78,8 @@ form.link, form.button {
   .jumbotron {
     border-bottom: 0;
   }
+}
+
+.thumbnail.terminada {
+  background-color: rgba(170, 255, 170, 0.38);
 }

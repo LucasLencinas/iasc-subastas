@@ -22,9 +22,10 @@ defmodule IascSubastas.SubastaController do
         # Notificamos a los compradores sobre la nueva subasta
         IascSubastas.Endpoint.broadcast! "subastas:general",
                                          "nueva_subasta",
-                                          %{id: subasta.id,
+                                          %{subasta_id: subasta.id,
                                             precio: subasta.precio_base,
-                                            duracion: subasta.duracion}
+                                            duracion: subasta.duracion,
+                                            vendedor: subasta.vendedor}
         conn
         |> put_status(:created)
         |> put_resp_header("location", subasta_path(conn, :show, subasta))
