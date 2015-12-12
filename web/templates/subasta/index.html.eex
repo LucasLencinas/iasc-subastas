@@ -34,50 +34,6 @@
         <hr>
 
 
-
-        <!-- Page Features -->
-        <div class="row text-center">
-
-          <div class="col-md-6"  id="subastasActuales">
-            <h3>Subastas Actuales</h3>
-          </div><!-- /.SubastasActuales -->
-
-          <div class="col-md-6">
-            <h3>Nueva Subasta</h3>
-            <form class="form-horizontal" role="form">
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="tituloNuevaSubasta">Titulo:</label>
-                <div class="col-sm-10">
-                  <input class="form-control" id="tituloNuevaSubasta" placeholder="Titulo de la subasta">
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="precioNuevaSubasta">Precio:</label>
-                <div class="col-sm-10">
-                  <input class="form-control" id="precioNuevaSubasta" >
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="control-label col-sm-2" for="duracionNuevaSubasta">Duracion:</label>
-                <div class="col-sm-10">
-                  <input class="form-control" id="duracionNuevaSubasta" >
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <button type="button" class="btn btn-default" onclick="crearNuevaSubasta()">CrearSubasta</button>
-                </div>
-              </div>
-            </form>
-
-            <div class="col-md-6"  id="misSubastas">
-              <h3>Mis Subastas</h3>
-            </div>
-
-          </div>
-        </div>
-        <!-- /.row -->
-
         <!--Lo de abajo es para probar caso por caso -->
 
         <div class="row text-center">
@@ -91,16 +47,11 @@
                 <div class="form-group">
                   <label for="nombreCliente1A">Nombre:</label>
                   <input id="nombreCliente1A" value="cliente1A" >
-                  <button type="button" class="btn btn-primary" id= "botonRegistrar1A" onclick="login()">Registrar</button>
+                  <button type="button" class="btn btn-primary" id= "botonRegistrar1A" onclick="registrarA()">Registrar</button>
                 </div>
-                <h5>actuales</h5>
-                <div>
-                  <div class="thumbnail">
-                    <div class="caption" id="asd">
-                    <h3>casa</h3><p>$ 5.</p><p>Finalizada: si.</p><p>
-                    <button class="btn btn-primary" onclick="ofertar(asd)"> Ofertar (+ $2)! </button></p>
-                    </div>
-                  </div>
+                <h5>Actuales</h5>
+                <div id="subastasCliente1A">
+
                 </div>
               </div>
               <div id="cliente1B" class="col-md-12">
@@ -108,7 +59,11 @@
                 <div class="form-group">
                   <label for="nombreCliente1B">Nombre:</label>
                   <input id="nombreCliente1B" value="cliente1B">
-                  <button type="button" class="btn btn-primary" id= "botonRegistrar1B" onclick="login()">Registrar</button>
+                  <button type="button" class="btn btn-primary" id= "botonRegistrar1B" onclick="registrarB()">Registrar</button>
+                </div>
+                <h5>Actuales</h5>
+                <div id="subastasCliente1B">
+
                 </div>
               </div>
             </div>
@@ -118,7 +73,7 @@
                 <div class="form-group">
                   <label for="nombreVendedor1">Nombre:</label>
                   <input id="nombreVendedor1" value="vendedor1">
-                  <button type="button" class="btn btn-primary" id= "botonRegistrar1" onclick="login()">Registrar</button>
+                  <button type="button" class="btn btn-primary" id= "botonRegistrar1" onclick="registrarVendedor1()">Registrar</button>
                 </div><!-- /form-group -->
                 <h4>Nueva Subasta</h4>
                 <div class="form-group">
@@ -136,87 +91,14 @@
                 <div class="form-group">
                     <button type="button" class="btn btn-default" onclick="crearNuevaSubasta()">CrearSubasta</button>
                 </div>
+                <div  id="subastasVendedor">
+                  <h3>Mis Subastas</h3>
+                </div>
               </div>
             </div>
           </div><!-- /Caso 1 -->
 
-          <div id="caso2">
-            <h3>Test Case 2</h3>
-              <div id="cliente2A">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="cliente2B">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="vendedor2">
-                <h3>Subastas Actuales</h3>
-              </div>
-          </div><!-- /Caso 2 -->
 
-          <div id="caso3">
-            <h3>Test Case 3</h3>
-              <div id="cliente3A">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="cliente3B">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="vendedor3">
-                <h3>Subastas Actuales</h3>
-              </div>
-          </div><!-- /Caso 3 -->
-
-          <div id="caso4">
-            <h3>Test Case 4</h3>
-              <div id="cliente4A">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="cliente4B">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="vendedor4">
-                <h3>Subastas Actuales</h3>
-              </div>
-          </div><!-- /Caso 4 -->
-
-          <div id="caso5">
-            <h3>Test Case 5</h3>
-              <div id="cliente5A">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="cliente5B">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="vendedor5">
-                <h3>Subastas Actuales</h3>
-              </div>
-          </div><!-- /Caso 5 -->
-
-          <div id="caso6">
-            <h3>Test Case 6</h3>
-              <div id="cliente6A">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="cliente6B">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="vendedor6">
-                <h3>Subastas Actuales</h3>
-              </div>
-          </div><!-- /Caso 6 -->
-
-          <div id="caso7">
-            <h3>Test Case 7</h3>
-              <div id="cliente7A">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="cliente7B">
-                <h3>Subastas Actuales</h3>
-              </div>
-              <div id="vendedor7">
-                <h3>Subastas Actuales</h3>
-              </div>
-          </div><!-- /Caso 1 -->
 
 
         </div>
@@ -227,6 +109,7 @@
 
     </div><!-- /Container -->
 
+<!--
     <div class="modal fade" id= "modalLogin" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -244,6 +127,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" id= "botonLogin" onclick="login()">Login</button>
           </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+        </div><! /.modal-content >
+      </div><! /.modal-dialog >
+    </div><! /.modal >
+-->
