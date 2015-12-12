@@ -1,11 +1,24 @@
 defmodule IascSubastas do
   use Application
-
+  require Logger
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
   def start(_type, _args) do
-    import Supervisor.Spec, warn: false
+    failover_node = System.get_env("failover")
 
+    if failover_node do
+      Logger.info "Iniciando back up server"
+      Logger.info "Conectando a #{failover_node}"
+      Logger.info Node.connect(:"#{failover_node}")
+      start_back_up_server(failover_node)
+    else
+      Logger.info "Iniciando http server"
+      start_http_server
+    end
+  end
+
+  def start_http_server do
+    import Supervisor.Spec, warn: false
     children = [
       # Start the endpoint when the application starts
       supervisor(IascSubastas.Endpoint, []),
@@ -20,6 +33,19 @@ defmodule IascSubastas do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: IascSubastas.Supervisor]
     Supervisor.start_link(children, opts)
+  end
+
+  def start_back_up_server(node_name) do
+    receive do
+    after 1000 ->
+      Logger.info "Pingueando al server..."
+      if(Node.ping(:"#{node_name}") == :pang) do
+        Logger.info "El server está caido."
+        start_http_server
+      else
+        start_back_up_server(node_name)
+      end
+    end
   end
 
   # Tell Phoenix to update the endpoint configuration

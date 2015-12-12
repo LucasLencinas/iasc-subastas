@@ -1,14 +1,33 @@
 # IascSubastas - IASC-2c-2015
 
-Levantar la aplicación
+
+##  Instalación
 
   1. Instalar dependencias `mix deps.get`
-  2. Crear y migrar la base de datos con `mix ecto.create && mix ecto.migrate`
-  3. Levantar el server con `mix phoenix.server`
+  2. Crear y migrar la base de datos con `mix ecto.create && mix ecto.migrate` (es necesario tener PostgreSQL)
+
+## Levantar la aplicación
+
+  1. Levantar el server principal:
+    ```bash
+      > iex --sname main -S mix phoenix.server
+    ```
+
+  2. Levantar el server de backup:
+    ```bash
+      > failover='main@<hostname>' iex --sname backup -S mix phoenix.server
+    ```
+
+  El server de backup pinguea al server principal, cuando detecta que está caido el se inicia el server http en el server de backup.
+
+## Aclaraciones
+
+  1. Los registros de usuario son implícitos: Para simplificar, no considerando cuestiones de seguridad, asumimos que quien está mandando la petición http puede realizar la acción y mandará su nombre en el cuerpo cuando sea necesario. Consideramos al nombre cómo identificador de los compradores o vendedores.
+  2. No encontramos la forma de ejecutar una app phoenix distribuida por lo que implementamos manualmente el server de failover.
 
 ## Api
 
-# Crear una subasta
+### Crear una subasta
 
 ```
 POST /api/subastas
@@ -25,13 +44,13 @@ body:
 }
 ```
 
-# Cancelar una subasta
+### Cancelar una subasta
 
 ```
 POST /api/subastas/:id_subasta/cancelar
 ```
 
-# Ofertar
+### Ofertar
 
 ```
 POST /api/subastas/:id_subasta/ofertas
