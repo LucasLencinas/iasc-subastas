@@ -19,6 +19,12 @@ defmodule IascSubastas.SubastaController do
       {:ok, subasta} ->
         # Notificamos al worker
         GenServer.cast({:global, :subasta_worker}, {:nueva_subasta, subasta.id})
+        # Notificamos a los compradores sobre la nueva subasta
+        IascSubastas.Endpoint.broadcast! "subastas:general",
+                                         "nueva_subasta",
+                                          %{id: subasta.id,
+                                            precio: subasta.precio,
+                                            duracion: subasta.duracion}
         conn
         |> put_status(:created)
         |> put_resp_header("location", subasta_path(conn, :show, subasta))
