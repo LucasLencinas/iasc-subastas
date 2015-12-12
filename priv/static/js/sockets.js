@@ -1310,6 +1310,7 @@ var App = (function () {
           if ($("#nombreUsuarioLogueado").text() != msg.vendedor) {
             alert(msg.vendedor + " creó una nueva subasta. (precio: " + msg.precio + ", duracion: " + msg.duracion);
           }
+          mostrarContenido();
         });
 
         chan.on("subasta_terminada", function (msg) {
@@ -1323,6 +1324,7 @@ var App = (function () {
           } else {
             alert("Nadie ganó la subasta (" + msg.subasta_id + ").");
           }
+          mostrarContenido();
         });
 
         chan.on("nueva_oferta", function (msg) {
@@ -1330,6 +1332,7 @@ var App = (function () {
           if (msg.comprador != $("#nombreUsuarioLogueado").text()) {
             alert(msg.comprador + " mejoro la oferta de la subasta (" + msg.subasta_id + ").");
           }
+          mostrarContenido();
         });
       }
     },
