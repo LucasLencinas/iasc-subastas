@@ -7,7 +7,7 @@ var misSubastas = [];
 
 function initialize() {
   $('#modalLogin').modal('show');
-  mostrarContenido();
+  //mostrarContenido();
 }
 
 function renderizarSubastas(){
@@ -22,11 +22,13 @@ function renderizarUnaSubasta(subasta){
   var vistaSubasta = sprintf("<div class=\"col-md-4 col-sm-8 col-xs-6 hero-feature\">");
   //  var vistaSubasta = sprintf("<div>");
   if (subasta.mejor_oferta == null) subasta.mejor_oferta = {precio: subasta.precio_base};
-  vistaSubasta += sprintf("<div class=\"thumbnail %s\">", (subasta.terminada ? 'terminada' : 'activa'));
+  vistaSubasta += sprintf("<div class=\"thumbnail %s\" id=\"thumbnail_%s\">", (subasta.terminada ? 'terminada' : 'activa'), subasta.id);
   vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", subasta.id);
   vistaSubasta += sprintf("<h4>%s (id = %s)</h4><p>$ %s.</p><p>Vendedor: %s.</p><p><p>Finalizada: %s.</p><p>" +
         "<button class=\"btn btn-primary\" onclick=\"ofertar(%s)\"> Ofertar (+ $2)! </button></p>",
         subasta.titulo, subasta.id, subasta.mejor_oferta.precio, subasta.vendedor, (subasta.terminada ? 'Sí' : 'No'), subasta.id);
+  if($("#nombreUsuarioLogueado").text() == subasta.vendedor && !subasta.terminada)
+    vistaSubasta += sprintf("<button class=\"btn btn-default\" onclick=\"cancelarSubasta('%s')\">Cancelar Subasta</button>",subasta.id);
   vistaSubasta += "</div></div></div>";
   $('#subastasActuales').prepend(vistaSubasta);
 
@@ -80,7 +82,6 @@ function crearNuevaSubasta(){
     success: function (data) {
       console.log("Se Creo al Subasta Correctamente.");
       vaciarForm();
-      agregarAlDivMisSubastas(subasta);
       misSubastas.push(subasta);
     },
     error: function(jqXHR, textStatus, errorThrown){
@@ -120,15 +121,6 @@ function vaciarForm(){
 
 }
 
-function agregarAlDivMisSubastas(unaSubasta){
-  var vistaSubasta = sprintf("<div class=\"form-group\" id=\"div%s\">", unaSubasta.titulo);
-  vistaSubasta += sprintf("<label class=\"control-label col-sm-2\">%s</label>", unaSubasta.titulo);
-  vistaSubasta += sprintf("<div class=\"col-sm-10\">");
-  vistaSubasta += sprintf("<button class=\"btn btn-default\" onclick=\"cancelarSubasta('%s')\">Cancelar Subasta</button>",unaSubasta.titulo);
-  vistaSubasta += "</div></div>";
-  $('#misSubastas').prepend(vistaSubasta);
-
-}
 
 
 function login(){
@@ -136,6 +128,7 @@ function login(){
     $("#nombreUsuarioLogueado").text($("#nombreUsuario").val());
     idUsuario = $("#nombreUsuarioLogueado").text();
     $('#modalLogin').modal('toggle');
+    mostrarContenido();
 }
 
 function mostrarContenido(){
@@ -163,29 +156,26 @@ function mostrarContenido(){
   })
 }
 
-function cancelarSubasta(titulo){
+function cancelarSubasta(id){
 
   $.ajax({
     headers: { 'id-usuario': idUsuario },
     type: "POST",
-    url: location.origin + "/api/subastas/" + titulo + "/cancelar",
+    url: location.origin + "/api/subastas/" + id + "/cancelar",
     success: function (data) {
       console.log("Se Cancelo la Subasta Correctamente.");
-      eliminarMiSubasta(titulo);
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log("Crear Subasta - Hubo un error en el servidor");
       console.log(JSON.stringify(jqXHR) + ". " + JSON.stringify(textStatus) + ". " + JSON.stringify(errorThrown));
     }
   });
-
-
 }
 
-function eliminarMiSubasta(titulo){
-  $("#div"+titulo).remove();
+function eliminarMiSubasta(id){
+  $("#thumbnail_"+id).remove();
   misSubastas = $.grep(misSubastas, function(elem, index) {
-   return elem.titulo != titulo;
+   return elem.id != id;
   });
 
 }

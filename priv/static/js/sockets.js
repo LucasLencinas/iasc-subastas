@@ -1334,6 +1334,11 @@ var App = (function () {
           }
           mostrarContenido();
         });
+
+        chan.on("subasta_cancelada", function (msg) {
+          console.log("subasta_cancelada: ", msg);
+          mostrarContenido();
+        });
       }
     },
     sanitize: {
