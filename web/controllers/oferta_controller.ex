@@ -26,6 +26,11 @@ defmodule IascSubastas.OfertaController do
       true ->
         case Repo.insert(changeset) do
           {:ok, oferta} ->
+            # Notificamos a los compradores el nuevo precio
+            IascSubastas.Endpoint.broadcast! "subastas:general",
+                                             "nueva_oferta",
+                                              %{subasta_id: conn.params["subasta_id"],
+                                                precio: oferta_params["precio"]}
             conn
             |> put_status(:created)
             |> put_resp_header("location", subasta_oferta_path(conn, :show, conn.params["subasta_id"], oferta))

@@ -2,7 +2,7 @@ defmodule IascSubastas.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", IascSubastas.RoomChannel
+  channel "subastas:*", IascSubastas.SubastasChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

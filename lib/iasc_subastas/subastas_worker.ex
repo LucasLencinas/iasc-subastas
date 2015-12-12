@@ -62,8 +62,17 @@ defmodule IascSubastas.SubastaWorker do
     case subasta.mejor_oferta do
       nil ->
         Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, nadie ganó..."
+        # Notificamos a los compradores que nadie ganó
+        IascSubastas.Endpoint.broadcast! "subastas:general",
+                                         "subasta_terminada",
+                                          %{subasta_id: subasta_id}
       mejor_oferta ->
         Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, ganó #{mejor_oferta.comprador}..."
+        # Notificamos a los compradores quien fue el ganador
+        IascSubastas.Endpoint.broadcast! "subastas:general",
+                                         "subasta_terminada",
+                                          %{subasta_id: subasta_id,
+                                            ganador: mejor_oferta.comprador}
     end
   end
 
