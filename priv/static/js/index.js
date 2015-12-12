@@ -181,7 +181,7 @@ function cancelarSubasta(titulo){
 function registrarA(nombre){
   clienteA.nombre = $("#nombreCliente1A").val();
   clienteA.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  clienteA.socket.join("rooms", "lobby", {}, function(chann){
+  clienteA.socket.join("subastas", "general", {}, function(chann){
 
     chann.on("nueva:subasta", function(subasta){
       renderizarNuevaSubasta(subasta, clienteA);
@@ -233,7 +233,7 @@ function registrarA(nombre){
 function registrarB(nombre){
   clienteB.nombre = $("#nombreCliente1B").val();
   clienteB.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  clienteB.socket.join("rooms", "lobby", {}, function(chann){
+  clienteB.socket.join("subastas", "general", {}, function(chann){
 
     chann.on("nueva:subasta", function(subasta){
       renderizarNuevaSubasta(subasta, clienteB);
@@ -311,7 +311,7 @@ function renderizarNuevaSubasta(subasta, cliente){
 function registrarVendedor1(nombre){
   vendedor1.nombre = $("#nombreVendedor1").val();
   vendedor1.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  vendedor1.socket.join("rooms", "lobby", {}, function(chann){
+  vendedor1.socket.join("subastas", "general", {}, function(chann){
   vendedor1.channel = chann;
     /*los eventos de envio al servidor los pongo a parte, cuado se hacen los clicks en los botones.
     Todavia no se cuales son, asi que no peudo saberlo. Ejemplo:
