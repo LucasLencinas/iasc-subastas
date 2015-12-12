@@ -24,14 +24,19 @@ function renderizarSubasta(subasta, cliente){
   </div>
   */
   if (subasta.mejor_oferta == null) subasta.mejor_oferta = {precio: subasta.precio_base};
-  var vistaSubasta = sprintf("<div class=\"thumbnail\">");
-  vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", subasta.titulo);
-  vistaSubasta += sprintf("<h3>%s</h3><p id= \"%s \">$ %s.</p><p>%s.</p><p>" +
+  var vistaSubasta = sprintf("<div class=\"thumbnail\" id=\"%s\">", "thumbnail_" + cliente.sufijoDiv + "_"  + subasta.titulo);
+  vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", cliente.sufijoDiv + "_"  + subasta.titulo);
+  vistaSubasta += sprintf("<h3>%s</h3><p id= \"%s \">$ %s.</p><p id=\"%s\">%s.</p><p>" +
         "<button class=\"btn btn-primary\" onclick=\"ofertar(%s,%s)\"> Ofertar (+ $2)! </button></p>",
-        subasta.titulo,"precio_" + cliente.sufijoDiv + "_" + subasta.titulo , subasta.mejor_oferta.precio, estadoDeSubasta(subasta), cliente.nombre, subasta.titulo);
+        subasta.titulo,"precio_" + cliente.sufijoDiv + "_" + subasta.titulo , subasta.mejor_oferta.precio,
+        "estado_" + cliente.sufijoDiv + "_" + subasta.titulo, estadoDeSubasta(subasta), cliente.nombre, subasta.titulo);
   vistaSubasta += "</div></div>";
   $('#subastasCliente' + cliente.sufijoDiv).append(vistaSubasta);
 /*para modificar el precio actual despues hayu que buscar el elemento precio_sufijoDiv_titulo
+*/
+/*para eliminarla subasta actual hay que buscar el elemento "thumbnail_sufijoDiv_titulo
+*/
+/*para modificar el estado actual despues hayu que buscar el elemento estado_sufijoDiv_titulo
 */
 }
 
@@ -141,7 +146,7 @@ function vaciarForm(){
 }
 
 function agregarAlDivSubastasVendedor(unaSubasta){
-  var vistaSubasta = sprintf("<div class=\"form-group\" id=\"div%s\">", unaSubasta.titulo);
+  var vistaSubasta = sprintf("<div class=\"form-group\" id=\"div%s\">", "vendedeor_" + unaSubasta.titulo);
   vistaSubasta += sprintf("<label class=\"control-label col-sm-2\">%s</label>", unaSubasta.titulo);
   vistaSubasta += sprintf("<div class=\"col-sm-10\">");
   vistaSubasta += sprintf("<button class=\"btn btn-default\" onclick=\"cancelarSubasta('%s')\">Cancelar Subasta</button>",unaSubasta.titulo);
@@ -176,14 +181,22 @@ function cancelarSubasta(titulo){
 function registrarA(nombre){
   clienteA.nombre = $("#nombreCliente1A").val();
   clienteA.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  socket.join("rooms", "lobby", {}, function(chann){
+  clienteA.socket.join("rooms", "lobby", {}, function(chann){
 
     chann.on("nueva:subasta", function(subasta){
       renderizarNuevaSubasta(subasta, clienteA);
     });
 
-    chann.on("nueva:oferta:", function(oferta){
+    chann.on("nueva:oferta", function(oferta){
       renderizarOfertaEnSubasta(oferta,clienteA);
+    });
+
+    chann.on("subasta:cancelada", function(subasta){
+      renderizarCancelacionDeSubasta(subasta,clienteA);
+    });
+
+    chann.on("subasta:finalizada", function(subasta){
+      renderizarFinalizacionDeSubasta(subasta,clienteA);
     });
 
     clienteA.channel = chann;
@@ -220,7 +233,7 @@ function registrarA(nombre){
 function registrarB(nombre){
   clienteB.nombre = $("#nombreCliente1B").val();
   clienteB.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  socket.join("rooms", "lobby", {}, function(chann){
+  clienteB.socket.join("rooms", "lobby", {}, function(chann){
 
     chann.on("nueva:subasta", function(subasta){
       renderizarNuevaSubasta(subasta, clienteB);
@@ -228,6 +241,14 @@ function registrarB(nombre){
 
     chann.on("nueva:oferta:", function(oferta){
       renderizarOfertaEnSubasta(oferta,clienteB);
+    });
+
+    chann.on("subasta:cancelada", function(subasta){
+      renderizarCancelacionDeSubasta(subasta,clienteB);
+    });
+
+    chann.on("subasta:finalizada", function(subasta){
+      renderizarFinalizacionDeSubasta(subasta,clienteB);
     });
 
     clienteB.channel = chann;
@@ -260,6 +281,24 @@ function registrarB(nombre){
   });
 }
 
+function renderizarCancelacionDeSubasta(subasta, cliente){
+  var subastaDeLista = $.grep(cliente.subastas, function(elem){ return elem.titulo === subasta.titulo; })[0];
+  subastaDeLista.finalizada = true;
+  $("thumbnail_" + cliente.sufijoDiv + "_"  + subasta.titulo).remove();
+}
+
+function renderizarFinalizacionDeSubasta(subasta,cliente){
+  var subastaDeLista = $.grep(cliente.subastas, function(elem){ return elem.titulo === subasta.titulo; })[0];
+  subastaDeLista.finalizada = true;
+  if(ganadorDeLaSubasta(cliente,subasta))
+    $("estado_" + cliente.sufijoDiv + "_"  + subasta.titulo).html("Ha ganado la Subasta");
+  else
+    $("estado_" + cliente.sufijoDiv + "_"  + subasta.titulo).html("Ha perdido la Subasta");
+}
+
+function ganadorDeLaSubasta(cliente,subasta){
+  return subasta.nombreCliente === cliente.nombre;
+}
 
 
 function renderizarNuevaSubasta(subasta, cliente){
@@ -272,7 +311,7 @@ function renderizarNuevaSubasta(subasta, cliente){
 function registrarVendedor1(nombre){
   vendedor1.nombre = $("#nombreVendedor1").val();
   vendedor1.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  socket.join("rooms", "lobby", {}, function(chann){
+  vendedor1.socket.join("rooms", "lobby", {}, function(chann){
   vendedor1.channel = chann;
     /*los eventos de envio al servidor los pongo a parte, cuado se hacen los clicks en los botones.
     Todavia no se cuales son, asi que no peudo saberlo. Ejemplo:
