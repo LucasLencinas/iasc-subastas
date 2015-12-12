@@ -13,7 +13,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a id="nombreUsuarioLogueado" href="#">nombreUsuarioLogueado</a>
+                        <a id="nombreUsuarioLogueado" href="#"></a>
                     </li>
                 </ul>
             </div>
@@ -25,91 +25,49 @@
     <!-- Page Content -->
     <div class="container">
 
-        <!-- Jumbotron Header -->
-        <header class="jumbotron hero-spacer">
-            <h1>Bienvenido a Subastas IASC!</h1>
-            <p>Publica una subasta u oferta en alguna ya publicada.</p>
-        </header>
-
-        <hr>
-
-
-        <!--Lo de abajo es para probar caso por caso -->
-
+        <!-- Page Features -->
         <div class="row text-center">
-          <h1>Test Cases</h1>
 
-          <div id="caso1" class="col-md-12 conBorde">
-            <h3>Test Case 1</h3>
-            <div class="col-md-6">
-              <div id="cliente1A" class="col-md-12">
-                <h3>cliente1A</h3>
-                <div class="form-group">
-                  <label for="nombreCliente1A">Nombre:</label>
-                  <input id="nombreCliente1A" value="cliente1A" >
-                  <button type="button" class="btn btn-primary" id= "botonRegistrar1A" onclick="registrarA()">Registrar</button>
-                </div>
-                <h5>Actuales</h5>
-                <div id="subastasCliente1A">
+          <div class="col-md-6"  id="subastasActuales">
+            <h3>Subastas Actuales</h3>
+          </div><!-- /.SubastasActuales -->
 
+          <div class="col-md-6">
+            <h3>Nueva Subasta</h3>
+            <form class="form-horizontal" role="form">
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="tituloNuevaSubasta">Titulo:</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="tituloNuevaSubasta" placeholder="Titulo de la subasta">
                 </div>
               </div>
-              <div id="cliente1B" class="col-md-12">
-                <h3>cliente1B</h3>
-                <div class="form-group">
-                  <label for="nombreCliente1B">Nombre:</label>
-                  <input id="nombreCliente1B" value="cliente1B">
-                  <button type="button" class="btn btn-primary" id= "botonRegistrar1B" onclick="registrarB()">Registrar</button>
-                </div>
-                <h5>Actuales</h5>
-                <div id="subastasCliente1B">
-
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="precioNuevaSubasta">Precio:</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="precioNuevaSubasta" >
                 </div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div id="vendedor1">
-                <h3>vendedor1</h3>
-                <div class="form-group">
-                  <label for="nombreVendedor1">Nombre:</label>
-                  <input id="nombreVendedor1" value="vendedor1">
-                  <button type="button" class="btn btn-primary" id= "botonRegistrar1" onclick="registrarVendedor1()">Registrar</button>
-                </div><!-- /form-group -->
-                <h4>Nueva Subasta</h4>
-                <div class="form-group">
-                  <label for="tituloNuevaSubasta1">Titulo:</label>
-                  <input id="tituloNuevaSubasta1" placeholder="Titulo de la subasta"></br>
-                </div>
-                <div class="form-group">
-                  <label for="precioNuevaSubasta1">Precio:</label>
-                  <input id="precioNuevaSubasta1" >
-                </div>
-                <div class="form-group">
-                  <label for="duracionNuevaSubasta1">Duracion:</label>
-                  <input id="duracionNuevaSubasta1" >
-                </div>
-                <div class="form-group">
-                    <button type="button" class="btn btn-default" onclick="crearNuevaSubasta()">CrearSubasta</button>
-                </div>
-                <div  id="subastasVendedor">
-                  <h3>Mis Subastas</h3>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="duracionNuevaSubasta">Duracion:</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="duracionNuevaSubasta" >
                 </div>
               </div>
-            </div>
-          </div><!-- /Caso 1 -->
-
-
-
-
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="button" class="btn btn-default" onclick="crearNuevaSubasta()">CrearSubasta</button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+        <!-- /.row -->
 
 
 
 
+    </div>
 
-    </div><!-- /Container -->
-
-<!--
     <div class="modal fade" id= "modalLogin" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -127,7 +85,6 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" id= "botonLogin" onclick="login()">Login</button>
           </div>
-        </div><! /.modal-content >
-      </div><! /.modal-dialog >
-    </div><! /.modal >
--->
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->

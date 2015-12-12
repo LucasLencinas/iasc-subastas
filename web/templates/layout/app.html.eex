@@ -23,6 +23,8 @@
     <script src="<%= static_path(@conn, "/js/bootstrap.min.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/index.js") %>"></script>
     <script src="<%= static_path(@conn, "/js/phoenix.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/sockets.js") %>"></script>
+    <script>require("web/static/js/app")</script>
     <script>
     $( document ).ready(function() {
        initialize();

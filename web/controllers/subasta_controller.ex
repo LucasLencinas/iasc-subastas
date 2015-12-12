@@ -23,7 +23,7 @@ defmodule IascSubastas.SubastaController do
         IascSubastas.Endpoint.broadcast! "subastas:general",
                                          "nueva_subasta",
                                           %{id: subasta.id,
-                                            precio: subasta.precio,
+                                            precio: subasta.precio_base,
                                             duracion: subasta.duracion}
         conn
         |> put_status(:created)

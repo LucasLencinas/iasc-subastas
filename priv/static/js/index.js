@@ -1,93 +1,68 @@
 
 //Funciones que se ejcutan en el index.html
 
+var subastasDeTerceros = [];
 var idUsuario;
-var clienteA = {subastas: [], sufijoDiv: "1A"};
-var clienteB = {subastas: [], sufijoDiv: "1B"};
-var vendedor1 = {subastas: []};
-/*
-cliente: {nombre:, socket:, channel:, subastas}
-vendedor: {nombre:, socket:, channel:, subastas}
-*/
+var misSubastas = [];
 
 function initialize() {
-
+  $('#modalLogin').modal('show');
+  mostrarContenido();
 }
 
-function renderizarSubasta(subasta, cliente){
-  /*
-  <div class="thumbnail">
-    <div class="caption" id="asd">
-    <h3>casa</h3><p>$ 5.</p><p>Finalizada: si.</p><p>
-    <button class="btn btn-primary" onclick="ofertar(asd)"> Ofertar (+ $2)! </button></p>
-    </div>
-  </div>
-  */
+function renderizarSubastas(){
+  $.each(subastasDeTerceros[0],function(index, unaSubasta){
+    console.log(unaSubasta);
+        renderizarUnaSubasta(unaSubasta);
+  });
+}
+
+function renderizarUnaSubasta(subasta){
+  var vistaSubasta = sprintf("<div class=\"col-md-4 col-sm-8 hero-feature\">");
+  //  var vistaSubasta = sprintf("<div>");
   if (subasta.mejor_oferta == null) subasta.mejor_oferta = {precio: subasta.precio_base};
-  var vistaSubasta = sprintf("<div class=\"thumbnail\" id=\"%s\">", "thumbnail_" + cliente.sufijoDiv + "_"  + subasta.titulo);
-  vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", cliente.sufijoDiv + "_"  + subasta.titulo);
-  vistaSubasta += sprintf("<h3>%s</h3><p id= \"%s \">$ %s.</p><p id=\"%s\">%s.</p><p>" +
-        "<button class=\"btn btn-primary\" onclick=\"ofertar(%s,%s)\"> Ofertar (+ $2)! </button></p>",
-        subasta.titulo,"precio_" + cliente.sufijoDiv + "_" + subasta.titulo , subasta.mejor_oferta.precio,
-        "estado_" + cliente.sufijoDiv + "_" + subasta.titulo, estadoDeSubasta(subasta), cliente.nombre, subasta.titulo);
-  vistaSubasta += "</div></div>";
-  $('#subastasCliente' + cliente.sufijoDiv).append(vistaSubasta);
-/*para modificar el precio actual despues hayu que buscar el elemento precio_sufijoDiv_titulo
-*/
-/*para eliminarla subasta actual hay que buscar el elemento "thumbnail_sufijoDiv_titulo
-*/
-/*para modificar el estado actual despues hayu que buscar el elemento estado_sufijoDiv_titulo
-*/
-}
+  vistaSubasta += sprintf("<div class=\"thumbnail\">");
+  vistaSubasta += sprintf("<div class=\"caption\" id=\"%s\">", subasta.id);
+  vistaSubasta += sprintf("<h3>%s</h3><p>$ %s.</p><p>Finalizada: %s.</p><p>" +
+        "<button class=\"btn btn-primary\" onclick=\"ofertar(%s)\"> Ofertar (+ $2)! </button></p>",
+        subasta.titulo, subasta.mejor_oferta.precio, subasta.terminada, subasta.id);
+  vistaSubasta += "</div></div></div>";
+  $('#subastasActuales').append(vistaSubasta);
 
-function estadoDeSubasta(subasta){
-  return subasta.terminada ? "Finalizada" : "Activa";
 }
 
 /*Cuando oferto,y sale todo bien, cambiar el valor del monto actual*/
-function renderizarOfertaEnSubasta(oferta, cliente){
-  /*para modificar el precio actual despues hayu que buscar el elemento precio_sufijoDiv_titulo
-  */
+function renderizarOfertaEnSubasta(idOferta){
   console.log("A punto de renderizar el cambio del monto actual de la subasta");
-  $("#precio_" + cliente.sufijoDiv +"_" + oferta.titulo ).html("$" + oferta.precio);
-
-  var subasta = $.grep(cliente.subastas, function(elem){ return elem.titulo === tituloSubasta; })[0];
-  subasta.precio = oferta.precio; //Update del precio en la pagina
 
 }
 
 
-function ofertar(nombreCliente,tituloSubasta){
-
-  var clienteDeLaOferta;
-  if(nombreCliente == clienteA.nombre)
-    cilenteDeLaOferta = clienteA;
-  else
-    clienteDeLaOferta = clienteB;
+function ofertar(idSubasta){
 
   console.log("A punto de ofertar...");
-  var oferta = armarOferta(tituloSubasta, clienteDeLaOferta);
+  var oferta = armarOferta(idSubasta);
   $.ajax({
-    headers: { 'id-usuario': clienteDeLaOferta.nombre },
+    headers: { 'id-usuario': idUsuario },
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(oferta),
-    url:   location.origin + "/api/subastas/"+ tituloSubasta + "/ofertas",
+    url:   location.origin + "/api/subastas/"+ idSubasta + "/ofertas",
     success: function (data) {
       console.log("Se Oferto Correctamente.");
-      renderizarOfertaEnSubasta(JSON.parse(oferta),clienteDeLaOferta);
+      renderizarOfertaEnSubasta(oferta.id);
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log("Ofertar - Hubo un error en el servidor");
       console.log(JSON.stringify(jqXHR) + ". " + JSON.stringify(textStatus) + ". " + JSON.stringify(errorThrown));
     }
   });
+
 }
 
-function armarOferta(tituloSubasta, cliente){
-
-  var subasta = $.grep(cliente.subastas, function(elem){ return elem.titulo === tituloSubasta; })[0];
-  return {oferta:  {precio: subasta.mejor_oferta.precio+2, comprador: cliente.nombre, titulo: tituloSubasta} };
+function armarOferta(idSubasta){
+  var subasta = $.grep(subastasDeTerceros[0], function(elem){ return elem.id === idSubasta; })[0];
+  return {oferta:  {precio: subasta.mejor_oferta.precio+2, comprador: idUsuario} };
 }
 
 
@@ -95,9 +70,8 @@ function crearNuevaSubasta(){
   console.log("A punto de crear nueva subasta...");
   var subasta = armarSubasta();
   console.log("contenido del json subasta:" + JSON.stringify(subasta));
-
   $.ajax({
-    //headers: { 'id-usuario': idUsuario },
+    headers: { 'id-usuario': idUsuario },
     type: "POST",
     contentType: "application/json",
     data: JSON.stringify(subasta),
@@ -105,8 +79,8 @@ function crearNuevaSubasta(){
     success: function (data) {
       console.log("Se Creo al Subasta Correctamente.");
       vaciarForm();
-      agregarAlDivSubastasVendedor(JSON.parse(subasta));
-      vendedor1.subastas.push(JSON.parse(subasta));
+      agregarAlDivMisSubastas(subasta);
+      misSubastas.push(subasta);
     },
     error: function(jqXHR, textStatus, errorThrown){
       console.log("Crear Subasta - Hubo un error en el servidor");
@@ -126,11 +100,10 @@ function armarSubasta(){
   */
   return {
       subasta:{
-         vendedor: $("#nombreVendedor1").val(),
+         vendedor: idUsuario,
          titulo: $("#tituloNuevaSubasta").val(),
          duracion: $("#duracionNuevaSubasta").val(),
-         /* EN segundos
-         O si queres poner el tiempo final
+         /*O si queres poner el tiempo final
          var xMinutesLater = new Date();
          xMinutesLater.setMinutes(xMinutesLater.getMinutes() + $("#duracionNuevaSubasta").val());*/
          precio_base: $("#precioNuevaSubasta").val(),
@@ -143,25 +116,55 @@ function vaciarForm(){
   titulo: $("#tituloNuevaSubasta").val("");
   duracion: $("#duracionNuevaSubasta").val("");
   precioBase: $("#precioNuevaSubasta").val("");
+
 }
 
-function agregarAlDivSubastasVendedor(unaSubasta){
-  var vistaSubasta = sprintf("<div class=\"form-group\" id=\"div%s\">", "vendedeor_" + unaSubasta.titulo);
+function agregarAlDivMisSubastas(unaSubasta){
+  var vistaSubasta = sprintf("<div class=\"form-group\" id=\"div%s\">", unaSubasta.titulo);
   vistaSubasta += sprintf("<label class=\"control-label col-sm-2\">%s</label>", unaSubasta.titulo);
   vistaSubasta += sprintf("<div class=\"col-sm-10\">");
   vistaSubasta += sprintf("<button class=\"btn btn-default\" onclick=\"cancelarSubasta('%s')\">Cancelar Subasta</button>",unaSubasta.titulo);
   vistaSubasta += "</div></div>";
-  $('#subastasVendedor').append(vistaSubasta);
+  $('#misSubastas').append(vistaSubasta);
 
 }
 
 
+function login(){
+    var nombreUsuario = $("#nombreUsuario").val();
+    $("#nombreUsuarioLogueado").text($("#nombreUsuario").val());
+    idUsuario = $("#nombreUsuarioLogueado").text();
+    $('#modalLogin').modal('toggle');
+}
 
+function mostrarContenido(){
+ /* subastasDeTerceros.push({id: 1, titulo:"pelota futbol", montoActual: 20.00});
+  subastasDeTerceros.push({id: 2, titulo:"remera", montoActual: 50.00});
+  /*Cambiar esas subastas de arriba por una peticion ajax al servidor despues de haberse logueado*/
+  $.ajax({
+    headers: { 'id-usuario': idUsuario },
+    type: "GET",
+    contentType: "application/json",
+    url: "/api/subastas",
+    success: function (data) {
+      console.log("Se obtuvieron correctamente las subastas.");
+      $.each(data,function(index, unaSubasta){
+          subastasDeTerceros.push(unaSubasta);
+          renderizarSubastas(); //Descomentar este y borrar el otro renderizar que esta de prueba
+      });
+
+    },
+    error: function(jqXHR, textStatus, errorThrown){
+      console.log("Get de subastas - Hubo un error en el servidor");
+      console.log(JSON.stringify(jqXHR) + ". " + JSON.stringify(textStatus) + ". " + JSON.stringify(errorThrown));
+    }
+  })
+}
 
 function cancelarSubasta(titulo){
 
   $.ajax({
-    headers: { 'id-usuario': $("#nombreVendedor1").val() },
+    headers: { 'id-usuario': idUsuario },
     type: "POST",
     url: location.origin + "/api/subastas/" + titulo + "/cancelar",
     success: function (data) {
@@ -177,155 +180,9 @@ function cancelarSubasta(titulo){
 
 }
 
-
-function registrarA(nombre){
-  clienteA.nombre = $("#nombreCliente1A").val();
-  clienteA.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  clienteA.socket.join("subastas", "general", {}, function(chann){
-
-    chann.on("nueva:subasta", function(subasta){
-      renderizarNuevaSubasta(subasta, clienteA);
-    });
-
-    chann.on("nueva:oferta", function(oferta){
-      renderizarOfertaEnSubasta(oferta,clienteA);
-    });
-
-    chann.on("subasta:cancelada", function(subasta){
-      renderizarCancelacionDeSubasta(subasta,clienteA);
-    });
-
-    chann.on("subasta:finalizada", function(subasta){
-      renderizarFinalizacionDeSubasta(subasta,clienteA);
-    });
-
-    clienteA.channel = chann;
-    /*los eventos de envio al servidor los pongo a parte, cuado se hacen los clicks en los botones.
-    Todavia no se cuales son, asi que no peudo saberlo. Ejemplo:
-    channelA.send("nueva:oferta", {
-      content: $messageInput.val(),
-      username: $usernameInput.val()
-    });
-    */
-  });
-
-  $.ajax({
-    headers: { 'id-usuario': clienteA.nombre },
-    type: "GET",
-    contentType: "application/json",
-    url: "/api/subastas",
-    success: function (data) {
-      console.log("Se obtuvieron correctamente las subastas.");
-      $.each(data,function(index, unaSubasta){
-          clienteA.subastas.push(unaSubasta);
-          renderizarSubasta(unaSubasta,clienteA);
-      });
-
-    },
-    error: function(jqXHR, textStatus, errorThrown){
-      console.log("Get de subastas - Hubo un error en el servidor");
-      console.log(JSON.stringify(jqXHR) + ". " + JSON.stringify(textStatus) + ". " + JSON.stringify(errorThrown));
-    }
-  });
-
-}
-
-function registrarB(nombre){
-  clienteB.nombre = $("#nombreCliente1B").val();
-  clienteB.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  clienteB.socket.join("subastas", "general", {}, function(chann){
-
-    chann.on("nueva:subasta", function(subasta){
-      renderizarNuevaSubasta(subasta, clienteB);
-    });
-
-    chann.on("nueva:oferta:", function(oferta){
-      renderizarOfertaEnSubasta(oferta,clienteB);
-    });
-
-    chann.on("subasta:cancelada", function(subasta){
-      renderizarCancelacionDeSubasta(subasta,clienteB);
-    });
-
-    chann.on("subasta:finalizada", function(subasta){
-      renderizarFinalizacionDeSubasta(subasta,clienteB);
-    });
-
-    clienteB.channel = chann;
-    /*los eventos de envio al servidor los pongo a parte, cuado se hacen los clicks en los botones.
-    Todavia no se cuales son, asi que no peudo saberlo. Ejemplo:
-    channelA.send("nueva:oferta", {
-      content: $messageInput.val(),
-      username: $usernameInput.val()
-    });
-    */
-  });
-
-  $.ajax({
-    headers: { 'id-usuario': clienteB.nombre },
-    type: "GET",
-    contentType: "application/json",
-    url: "/api/subastas",
-    success: function (data) {
-      console.log("Se obtuvieron correctamente las subastas.");
-      $.each(data,function(index, unaSubasta){
-          clienteA.subastas.push(unaSubasta);
-          renderizarSubasta(unaSubasta,clienteA);
-      });
-
-    },
-    error: function(jqXHR, textStatus, errorThrown){
-      console.log("Get de subastas - Hubo un error en el servidor");
-      console.log(JSON.stringify(jqXHR) + ". " + JSON.stringify(textStatus) + ". " + JSON.stringify(errorThrown));
-    }
-  });
-}
-
-function renderizarCancelacionDeSubasta(subasta, cliente){
-  var subastaDeLista = $.grep(cliente.subastas, function(elem){ return elem.titulo === subasta.titulo; })[0];
-  subastaDeLista.finalizada = true;
-  $("thumbnail_" + cliente.sufijoDiv + "_"  + subasta.titulo).remove();
-}
-
-function renderizarFinalizacionDeSubasta(subasta,cliente){
-  var subastaDeLista = $.grep(cliente.subastas, function(elem){ return elem.titulo === subasta.titulo; })[0];
-  subastaDeLista.finalizada = true;
-  if(ganadorDeLaSubasta(cliente,subasta))
-    $("estado_" + cliente.sufijoDiv + "_"  + subasta.titulo).html("Ha ganado la Subasta");
-  else
-    $("estado_" + cliente.sufijoDiv + "_"  + subasta.titulo).html("Ha perdido la Subasta");
-}
-
-function ganadorDeLaSubasta(cliente,subasta){
-  return subasta.nombreCliente === cliente.nombre;
-}
-
-
-function renderizarNuevaSubasta(subasta, cliente){
-  cliente.subastas.push(subasta);
-  renderizarSubasta(subasta,cliente);
-
-}
-
-
-function registrarVendedor1(nombre){
-  vendedor1.nombre = $("#nombreVendedor1").val();
-  vendedor1.socket = new Phoenix.Socket("ws://" + location.host + "/ws");
-  vendedor1.socket.join("subastas", "general", {}, function(chann){
-  vendedor1.channel = chann;
-    /*los eventos de envio al servidor los pongo a parte, cuado se hacen los clicks en los botones.
-    Todavia no se cuales son, asi que no peudo saberlo. Ejemplo:
-    channelA.send("nueva:oferta", {
-      content: $messageInput.val(),
-      username: $usernameInput.val()
-    });
-    */
-  });
-}
-
 function eliminarMiSubasta(titulo){
   $("#div"+titulo).remove();
-  vendedor1.subastas = $.grep(vendedor1.subastas, function(elem, index) {
+  misSubastas = $.grep(misSubastas, function(elem, index) {
    return elem.titulo != titulo;
   });
 
@@ -347,4 +204,25 @@ function sprintf( format ){
     format = format.replace( /%s/, arguments[i] );
   }
   return format;
+}
+
+
+function readCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0;i < ca.length;i++) {
+    var c = ca[i];
+    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+  }
+  return null;
+}
+function createCookie(name,value,days) {
+  if (days) {
+    var date = new Date();
+    date.setTime(date.getTime()+(days*24*60*60*1000));
+    var expires = "; expires="+date.toGMTString();
+  }
+  else var expires = "";
+  document.cookie = name+"="+value+expires+"; path=/";
 }
