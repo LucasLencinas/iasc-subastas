@@ -64,22 +64,25 @@ defmodule IascSubastas.SubastaWorker do
 
   def termina_subasta(subasta_id) do
     subasta = Repo.get!(Subasta, subasta_id) |> Repo.preload(:mejor_oferta)
-    changeset = Subasta.changeset(subasta, %{terminada: true})
-    Repo.update(changeset)
-    case subasta.mejor_oferta do
-      nil ->
-        Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, nadie ganó..."
-        # Notificamos a los compradores que nadie ganó
-        IascSubastas.Endpoint.broadcast! "subastas:general",
-                                         "subasta_terminada",
-                                          %{subasta_id: subasta_id}
-      mejor_oferta ->
-        Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, ganó #{mejor_oferta.comprador}..."
-        # Notificamos a los compradores quien fue el ganador
-        IascSubastas.Endpoint.broadcast! "subastas:general",
-                                         "subasta_terminada",
-                                          %{subasta_id: subasta_id,
-                                            ganador: mejor_oferta.comprador}
+    Logger.info"SubastaWorker> estado de la subasta antes del if #{subasta.terminada}..."
+    if (not subasta.terminada) do
+      changeset = Subasta.changeset(subasta, %{terminada: true})
+      Repo.update(changeset)
+      case subasta.mejor_oferta do
+        nil ->
+          Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, nadie ganó..."
+          # Notificamos a los compradores que nadie ganó
+          IascSubastas.Endpoint.broadcast! "subastas:general",
+                                           "subasta_terminada",
+                                            %{subasta_id: subasta_id}
+        mejor_oferta ->
+          Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, ganó #{mejor_oferta.comprador}..."
+          # Notificamos a los compradores quien fue el ganador
+          IascSubastas.Endpoint.broadcast! "subastas:general",
+                                           "subasta_terminada",
+                                            %{subasta_id: subasta_id,
+                                              ganador: mejor_oferta.comprador}
+      end
     end
   end
 

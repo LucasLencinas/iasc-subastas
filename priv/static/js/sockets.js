@@ -1314,8 +1314,7 @@ var App = (function () {
         });
 
         chan.on("subasta_terminada", function (msg) {
-          var subasta = $.grep(subastasDeTerceros[0], function(elem){ return elem.id === msg.id; })[0];
-          if(!subasta.terminada){
+
             console.log("Subasta terminada: ", msg);
             if (msg.ganador) {
               if (msg.ganador == $("#nombreUsuarioLogueado").text()) {
@@ -1327,7 +1326,7 @@ var App = (function () {
               alert("Nadie ganó la subasta (" + msg.subasta_id + ").");
             }
             mostrarContenido();
-          }
+
         });
 
         chan.on("nueva_oferta", function (msg) {
