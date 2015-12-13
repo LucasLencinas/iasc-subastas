@@ -22,8 +22,10 @@
 
 ## Aclaraciones
 
-  1. Los registros de usuario son implícitos: Para simplificar, no considerando cuestiones de seguridad, asumimos que quien está mandando la petición http puede realizar la acción y mandará su nombre en el cuerpo cuando sea necesario. Consideramos al nombre cómo identificador de los compradores o vendedores.
-  2. No encontramos la forma de ejecutar una app phoenix distribuida por lo que implementamos manualmente el server de failover.
+  1. Los registros de usuario son implícitos: para simplificar, no considerando cuestiones de seguridad, asumimos que quien está mandando la petición http puede realizar la acción y mandará su nombre en el cuerpo cuando sea necesario. Consideramos al nombre cómo identificador de los compradores o vendedores.
+  2. La forma de contacto (notificaciones) es a través de websockets (los interesados se subscriben al canal 'subastas:general' para recibir notificaciones)
+  3. No encontramos la forma de ejecutar una app phoenix distribuida por lo que implementamos manualmente el server de failover.
+  4. **El cliente de prueba se renderiza en http://localhost:4000/. En el mismo se pueden probar acciones de comprador y vendedor.**
 
 ## Api
 
@@ -68,8 +70,8 @@ body:
 ## Subasta worker
 
 Es un GenServer que se encarga de notificar a la app http que se termina una subasta.
-Cuando inicia carga las subastas activas de la db y cada vez que se agrega una hay que mandarle un cast con {:nueva_subasta, subasta_id}.
-
+Cuando inicia carga las subastas activas de la db y cada vez que se agrega una hay que mandarle un cast con ```{:nueva_subasta, subasta_id}```.
+Cuando un vendedor cancela la subasta se le envía ```{:cancela_subasta, subasta_id}```.
 
 # Enunciado
 TP final de Arquitecturas Concurrentes
@@ -157,7 +159,7 @@ Similar a los escenarios anteriores, pero un tercer participante, C, se registra
 
 ###4.5 Escenario 5: Subastas múltiples
 
-Mientras una subasta está en progreso, un vendedor (que puede ser el mismo de la anterior u otro) crea una nueva subasta, y las dos subastas estarán en progreso en simultáneo, funcionando cada una de ellas como siempre.  
+Mientras una subasta está en progreso, un vendedor (que puede ser el mismo de la anterior u otro) crea una nueva subasta, y las dos subastas estarán en progreso en simultáneo, funcionando cada una de ellas como siempre.
 
 ###4.6 Escenario 6: Caída del servidor
 
