@@ -58,11 +58,17 @@ defmodule IascSubastas.SubastaController do
 
   def cancelar(conn, %{"subasta_id" => id}) do
     subasta = Repo.get!(Subasta, id) |> Repo.preload(:mejor_oferta)
+    if subasta.mejor_oferta != nil do
+      Repo.delete!(subasta.mejor_oferta)
+    end
     changeset = Subasta.changeset(subasta, %{terminada: true})
 
     case Repo.update(changeset) do
       {:ok, subasta} ->
+        # Notificamos al worker
+        GenServer.cast({:global, :subasta_worker}, {:cancela_subasta, subasta.id})
         render(conn, "show.json", subasta: subasta)
+
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

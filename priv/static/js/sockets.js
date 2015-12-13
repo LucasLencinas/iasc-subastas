@@ -1314,17 +1314,20 @@ var App = (function () {
         });
 
         chan.on("subasta_terminada", function (msg) {
-          console.log("Subasta terminada: ", msg);
-          if (msg.ganador) {
-            if (msg.ganador == $("#nombreUsuarioLogueado").text()) {
-              alert("Ganaste la subasta (" + msg.subasta_id + "). Felicitaciones!");
+          var subasta = $.grep(subastasDeTerceros[0], function(elem){ return elem.id === msg.id; })[0];
+          if(!subasta.terminada){
+            console.log("Subasta terminada: ", msg);
+            if (msg.ganador) {
+              if (msg.ganador == $("#nombreUsuarioLogueado").text()) {
+                alert("Ganaste la subasta (" + msg.subasta_id + "). Felicitaciones!");
+              } else {
+                alert(msg.ganador + " ganó la subasta (" + msg.subasta_id + ").");
+              }
             } else {
-              alert(msg.ganador + " ganó la subasta (" + msg.subasta_id + ").");
+              alert("Nadie ganó la subasta (" + msg.subasta_id + ").");
             }
-          } else {
-            alert("Nadie ganó la subasta (" + msg.subasta_id + ").");
+            mostrarContenido();
           }
-          mostrarContenido();
         });
 
         chan.on("nueva_oferta", function (msg) {
@@ -1335,10 +1338,6 @@ var App = (function () {
           mostrarContenido();
         });
 
-        chan.on("subasta_cancelada", function (msg) {
-          console.log("subasta_cancelada: ", msg);
-          mostrarContenido();
-        });
       }
     },
     sanitize: {

@@ -48,12 +48,19 @@ defmodule IascSubastas.SubastaWorker do
     delay = duracion_subasta(subasta) + extra
     if delay < 0 do
       Logger.info"SubastaWorker> La subasta #{subasta.id} ya terminó..."
-      termina_subasta(subasta.id)
+      intenta_terminar_subasta(subasta)
     else
       Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{delay} segundos..."
-      apply_after delay |> seconds, do: termina_subasta(subasta.id)
+      apply_after delay |> seconds, do: intenta_terminar_subasta(subasta)
     end
   end
+
+  def intenta_terminar_subasta(subasta) do
+    if not subasta.terminada do
+      termina_subasta(subasta.id)
+    end
+  end
+
 
   def termina_subasta(subasta_id) do
     subasta = Repo.get!(Subasta, subasta_id) |> Repo.preload(:mejor_oferta)
