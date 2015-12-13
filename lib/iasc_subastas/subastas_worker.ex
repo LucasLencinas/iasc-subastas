@@ -36,7 +36,7 @@ defmodule IascSubastas.SubastaWorker do
   end
 
   def handle_cast({:cancela_subasta, subasta_id}, subastas) do
-    termina_subasta(subasta_id)
+    adjudicar_subasta(subasta_id)
     {:noreply, List.delete(subastas, subasta_id)}
   end
 
@@ -48,41 +48,42 @@ defmodule IascSubastas.SubastaWorker do
     delay = duracion_subasta(subasta) + extra
     if delay < 0 do
       Logger.info"SubastaWorker> La subasta #{subasta.id} ya terminó..."
-      intenta_terminar_subasta(subasta)
+      adjudicar_subasta(subasta.id)
     else
       Logger.info"SubastaWorker> La subasta #{subasta.id} termina en #{delay} segundos..."
-      apply_after delay |> seconds, do: intenta_terminar_subasta(subasta)
-    end
-  end
-
-  def intenta_terminar_subasta(subasta) do
-    if not subasta.terminada do
-      termina_subasta(subasta.id)
+      apply_after delay |> seconds, do: termina_subasta(subasta.id)
     end
   end
 
 
   def termina_subasta(subasta_id) do
     subasta = Repo.get!(Subasta, subasta_id) |> Repo.preload(:mejor_oferta)
-    Logger.info"SubastaWorker> estado de la subasta antes del if #{subasta.terminada}..."
-    if (not subasta.terminada) do
-      changeset = Subasta.changeset(subasta, %{terminada: true})
-      Repo.update(changeset)
-      case subasta.mejor_oferta do
-        nil ->
-          Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, nadie ganó..."
-          # Notificamos a los compradores que nadie ganó
-          IascSubastas.Endpoint.broadcast! "subastas:general",
-                                           "subasta_terminada",
-                                            %{subasta_id: subasta_id}
-        mejor_oferta ->
-          Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, ganó #{mejor_oferta.comprador}..."
-          # Notificamos a los compradores quien fue el ganador
-          IascSubastas.Endpoint.broadcast! "subastas:general",
-                                           "subasta_terminada",
-                                            %{subasta_id: subasta_id,
-                                              ganador: mejor_oferta.comprador}
-      end
+    if not subasta.terminada do
+      adjudicar_subasta(subasta_id)
+    else
+      Logger.info "SubastaWorker> La subasta (#{subasta_id}) fue cancelada antes del tiempo, no notificamos de nuevo."
+    end
+  end
+
+  def adjudicar_subasta(subasta_id) do
+    subasta = Repo.get!(Subasta, subasta_id) |> Repo.preload(:mejor_oferta)
+    changeset = Subasta.changeset(subasta, %{terminada: true})
+    Repo.update(changeset)
+
+    case subasta.mejor_oferta do
+      nil ->
+        Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, nadie ganó..."
+        # Notificamos a los compradores que nadie ganó
+        IascSubastas.Endpoint.broadcast! "subastas:general",
+                                         "subasta_terminada",
+                                          %{subasta_id: subasta_id}
+      mejor_oferta ->
+        Logger.info"SubastaWorker> terminó la subasta #{subasta_id}, ganó #{mejor_oferta.comprador}..."
+        # Notificamos a los compradores quien fue el ganador
+        IascSubastas.Endpoint.broadcast! "subastas:general",
+                                         "subasta_terminada",
+                                          %{subasta_id: subasta_id,
+                                            ganador: mejor_oferta.comprador}
     end
   end
 

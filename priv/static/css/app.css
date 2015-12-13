@@ -46,6 +46,7 @@ form.link, form.button {
 
 .thumbnail {
   width: 100%;
+  min-height: 235px;
 }
 
 .conBorde {

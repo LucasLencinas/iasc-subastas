@@ -58,7 +58,7 @@ defmodule IascSubastas.SubastaController do
 
   def cancelar(conn, %{"subasta_id" => id}) do
     subasta = Repo.get!(Subasta, id) |> Repo.preload(:mejor_oferta)
-    if subasta.mejor_oferta != nil do
+    if !is_nil(subasta.mejor_oferta) do
       Repo.delete!(subasta.mejor_oferta)
     end
     changeset = Subasta.changeset(subasta, %{terminada: true})

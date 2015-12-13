@@ -1314,7 +1314,6 @@ var App = (function () {
         });
 
         chan.on("subasta_terminada", function (msg) {
-
             console.log("Subasta terminada: ", msg);
             if (msg.ganador) {
               if (msg.ganador == $("#nombreUsuarioLogueado").text()) {

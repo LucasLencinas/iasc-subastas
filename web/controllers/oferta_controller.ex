@@ -24,8 +24,12 @@ defmodule IascSubastas.OfertaController do
         |> put_status(:bad_request)
         |> render(IascSubastas.ChangesetView, "error.json", changeset: "La subasta ya terminó")
       true ->
+        mejor_oferta_anterior = conn.assigns[:subasta].mejor_oferta
         case Repo.insert(changeset) do
           {:ok, oferta} ->
+            if !is_nil(mejor_oferta_anterior) do
+              Repo.delete!(mejor_oferta_anterior)
+            end
             # Notificamos a los compradores el nuevo precio
             IascSubastas.Endpoint.broadcast! "subastas:general",
                                              "nueva_oferta",
