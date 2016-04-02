@@ -1,5 +1,29 @@
-# IascSubastas - IASC-2c-2015
+## IascSubastas - IASC-2c-2015
+> Project for the Concurrent Software Architectures Implementation class.
 
+Web Application for auctioning products. 
+
+### Programming Languages, Libraries, Frameworks and other tools
+ 
+ - Erlang
+ - Phoenix
+ - Cowboy
+ - Web Sockets
+ - ECTO
+ - Postgress
+ - Javascript
+ - jQuery
+ - HTML/jQuery
+ - Bootstrap
+ 
+### Team:
+- Lucas Lencinas
+- Pablo Ferro
+- Mariano Pinkava
+- Matias Vallone
+- Leonel Masuello
+
+===============================
 
 ##  Instalación
 
